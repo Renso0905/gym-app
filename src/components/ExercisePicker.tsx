@@ -12,13 +12,15 @@ import { EXERCISE_KINDS, newId, type ExerciseKind } from '../lib/workouts';
 
 interface Props {
   exercises: ExerciseDef[];
+  /** "replace" picks exactly one exercise and returns straight away. */
+  mode?: 'add' | 'replace';
   onAdd: (selected: ExerciseDef[]) => void;
   onCreateCustom: (def: ExerciseDef) => void;
   onCancel: () => void;
 }
 
 /** Full-screen search over the exercise library. Tap to select several, then add them together. */
-export function ExercisePicker({ exercises, onAdd, onCreateCustom, onCancel }: Props) {
+export function ExercisePicker({ exercises, mode = 'add', onAdd, onCreateCustom, onCancel }: Props) {
   const [query, setQuery] = useState('');
   const [muscle, setMuscle] = useState<Muscle | ''>('');
   const [equipment, setEquipment] = useState<Equipment | ''>('');
@@ -27,7 +29,11 @@ export function ExercisePicker({ exercises, onAdd, onCreateCustom, onCancel }: P
 
   const results = useMemo(() => searchExercises(exercises, { query, muscle, equipment }), [exercises, query, muscle, equipment]);
   const isSelected = (def: ExerciseDef) => selected.some((s) => s.id === def.id);
-  const toggle = (def: ExerciseDef) => setSelected((list) => (list.some((s) => s.id === def.id) ? list.filter((s) => s.id !== def.id) : [...list, def]));
+  const replacing = mode === 'replace';
+  const toggle = (def: ExerciseDef) =>
+    replacing
+      ? onAdd([def])
+      : setSelected((list) => (list.some((s) => s.id === def.id) ? list.filter((s) => s.id !== def.id) : [...list, def]));
 
   if (creating) {
     return (
@@ -39,6 +45,7 @@ export function ExercisePicker({ exercises, onAdd, onCreateCustom, onCancel }: P
         onCancel={() => setCreating(false)}
         onCreate={(def) => {
           onCreateCustom(def);
+          if (replacing) return onAdd([def]);
           setSelected((list) => [...list, def]);
           setQuery('');
           setCreating(false);
@@ -53,7 +60,7 @@ export function ExercisePicker({ exercises, onAdd, onCreateCustom, onCancel }: P
         <button type="button" className="link" onClick={onCancel}>
           Cancel
         </button>
-        <strong>Add exercises</strong>
+        <strong>{replacing ? 'Replace exercise' : 'Add exercises'}</strong>
         <button type="button" className="link" onClick={() => setCreating(true)}>
           + Custom
         </button>
@@ -107,7 +114,7 @@ export function ExercisePicker({ exercises, onAdd, onCreateCustom, onCancel }: P
                   </span>
                 </span>
                 <span className="pick-check" aria-hidden="true">
-                  {isSelected(def) ? '✓' : '+'}
+                  {replacing ? '›' : isSelected(def) ? '✓' : '+'}
                 </span>
               </button>
             </li>
@@ -115,11 +122,13 @@ export function ExercisePicker({ exercises, onAdd, onCreateCustom, onCancel }: P
         </ul>
       )}
 
+      {!replacing && (
       <div className="sticky-footer">
         <button type="button" className="primary wide" disabled={selected.length === 0} onClick={() => onAdd(selected)}>
           {selected.length === 0 ? 'Select exercises' : `Add ${selected.length} exercise${selected.length === 1 ? '' : 's'}`}
         </button>
       </div>
+      )}
     </main>
   );
 }

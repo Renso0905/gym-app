@@ -21,11 +21,13 @@ interface Props<T extends Plan> {
   /** Log mode: finished sessions to read last time's numbers from. */
   history?: Session[];
   onChange: (plan: T) => void;
+  /** Asks the app to open the picker so this exercise can be swapped for another. */
+  onReplace: (exerciseId: string) => void;
   onToggleDone?: (exerciseId: string, setId: string, previous: SetValues | undefined) => void;
 }
 
 /** The exercise cards of a routine or a session, wired to the shared editing rules. */
-export function ExerciseList<T extends Plan>({ plan, unit, mode, history = [], onChange, onToggleDone }: Props<T>) {
+export function ExerciseList<T extends Plan>({ plan, unit, mode, history = [], onChange, onReplace, onToggleDone }: Props<T>) {
   const now = () => Date.now();
   return (
     <ul className="cards">
@@ -41,6 +43,7 @@ export function ExerciseList<T extends Plan>({ plan, unit, mode, history = [], o
           onChange={(patch) => onChange(updateExercise(plan, exercise.id, patch, now()))}
           onMove={(direction) => onChange(moveExercise(plan, exercise.id, direction, now()))}
           onDuplicate={() => onChange(duplicateExercise(plan, exercise.id, now()))}
+          onReplace={() => onReplace(exercise.id)}
           onRemove={() => onChange(removeExercise(plan, exercise.id, now()))}
           onAddSet={() => onChange(addSet(plan, exercise.id, now()))}
           onSetChange={(setId, values) => onChange(updateSet(plan, exercise.id, setId, values, now()))}

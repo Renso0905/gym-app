@@ -14,6 +14,7 @@ import {
   insertAfter,
   isBlankWorkout,
   removeWorkout,
+  replaceExercise,
   upsertWorkout,
   type Workout,
 } from './lib/workouts';
@@ -30,7 +31,7 @@ export function App() {
   const { routines, setRoutines, history, setHistory, active, setActive, unit } = data;
   const [tab, setTab] = useState<'routines' | 'history'>('routines');
   const [screen, setScreen] = useState<Screen>({ name: 'home' });
-  const [picking, setPicking] = useState(false);
+  const [picking, setPicking] = useState<null | { replace?: string }>(null);
   const library = useMemo(() => allExercises(data.customExercises), [data.customExercises]);
 
   const go = (next: Screen) => {
@@ -48,19 +49,27 @@ export function App() {
   }
 
   function addPicked(defs: ExerciseDef[]) {
+    const swap = picking?.replace;
+    if (swap && defs[0]) {
+      if (screen.name === 'session' && active) setActive(replaceExercise(active, swap, defs[0], Date.now()));
+      else if (routine) setRoutines((list) => upsertWorkout(list, replaceExercise(routine, swap, defs[0], Date.now())));
+      setPicking(null);
+      return;
+    }
     const exercises = defs.map((def) => exerciseFromDef(def));
     if (screen.name === 'session' && active) setActive(addExercises(active, exercises, Date.now()));
     else if (routine) setRoutines((list) => upsertWorkout(list, addExercises(routine, exercises, Date.now())));
-    setPicking(false);
+    setPicking(null);
   }
 
   if (picking) {
     return (
       <ExercisePicker
         exercises={library}
+        mode={picking.replace ? 'replace' : 'add'}
         onAdd={addPicked}
         onCreateCustom={(def) => data.setCustomExercises((list) => [...list, def])}
-        onCancel={() => setPicking(false)}
+        onCancel={() => setPicking(null)}
       />
     );
   }
@@ -73,7 +82,8 @@ export function App() {
         unit={unit}
         saveFailed={data.saveFailed}
         onChange={setActive}
-        onAddExercises={() => setPicking(true)}
+        onAddExercises={() => setPicking({})}
+        onReplaceExercise={(id) => setPicking({ replace: id })}
         onBack={() => go({ name: 'home' })}
         onDiscard={() => {
           setActive(null);
@@ -100,7 +110,8 @@ export function App() {
         saveFailed={data.saveFailed}
         canStart={active === null}
         onChange={(next) => setRoutines((list) => upsertWorkout(list, next))}
-        onAddExercises={() => setPicking(true)}
+        onAddExercises={() => setPicking({})}
+        onReplaceExercise={(id) => setPicking({ replace: id })}
         onStart={() => start(routine)}
         onDone={() => {
           // A routine left completely empty was a false start, not something to keep.

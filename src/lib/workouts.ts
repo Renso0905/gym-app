@@ -167,6 +167,27 @@ export function removeExercise<T extends Plan>(plan: T, exerciseId: string, now:
   return withExercises(plan, plan.exercises.filter((e) => e.id !== exerciseId), now);
 }
 
+/**
+ * Swaps an exercise for another from the library, in the same position with
+ * the same number of sets. Numbers are kept when both are measured the same
+ * way and cleared otherwise; ticks are always cleared, because the new
+ * exercise has not been performed.
+ */
+export function replaceExercise<T extends Plan>(
+  plan: T,
+  exerciseId: string,
+  def: { id: string; name: string; kind: ExerciseKind },
+  now: number,
+): T {
+  return mapExercise(plan, exerciseId, now, (e) => ({
+    ...e,
+    defId: def.id,
+    name: def.name,
+    kind: def.kind,
+    sets: e.sets.map(({ done: _done, ...set }) => (e.kind === def.kind ? set : { id: set.id })),
+  }));
+}
+
 /** Moves an exercise one place up (-1) or down (1). Moving past either end does nothing. */
 export function moveExercise<T extends Plan>(plan: T, exerciseId: string, direction: -1 | 1, now: number): T {
   const from = plan.exercises.findIndex((e) => e.id === exerciseId);

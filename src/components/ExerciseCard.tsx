@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { WeightUnit } from '../lib/storage';
 import {
   FIELDS_BY_KIND,
@@ -8,7 +9,6 @@ import {
   type SetField,
   type SetValues,
 } from '../lib/workouts';
-import { ConfirmButton } from './ConfirmButton';
 import { NumberField } from './NumberField';
 
 interface Props {
@@ -23,6 +23,7 @@ interface Props {
   onChange: (patch: ExercisePatch) => void;
   onMove: (direction: -1 | 1) => void;
   onDuplicate: () => void;
+  onReplace: () => void;
   onRemove: () => void;
   onAddSet: () => void;
   onSetChange: (setId: string, values: SetValues) => void;
@@ -54,17 +55,48 @@ export function ExerciseCard(props: Props) {
       : `2rem repeat(${fields.length}, minmax(0, 1fr)) 2.75rem`,
   };
   const lastSet = exercise.sets[exercise.sets.length - 1];
+  const [menuOpen, setMenuOpen] = useState(false);
+  const choose = (action: () => void) => () => {
+    setMenuOpen(false);
+    action();
+  };
 
   return (
     <li className="card exercise">
       <div className="exercise-head">
         <h2 className="exercise-title">{title}</h2>
-        <button type="button" className="icon" aria-label={`Move ${title} up`} disabled={index === 0} onClick={() => props.onMove(-1)}>
-          ↑
+        <button
+          type="button"
+          className="icon more"
+          aria-label={`Options for ${title}`}
+          aria-haspopup="menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          ⋯
         </button>
-        <button type="button" className="icon" aria-label={`Move ${title} down`} disabled={index === count - 1} onClick={() => props.onMove(1)}>
-          ↓
-        </button>
+        {menuOpen && (
+          <>
+            <div className="menu-backdrop" onClick={() => setMenuOpen(false)} />
+            <div className="menu" role="menu" aria-label={`Options for ${title}`}>
+              <button type="button" role="menuitem" onClick={choose(props.onReplace)}>
+                Replace exercise
+              </button>
+              <button type="button" role="menuitem" disabled={index === 0} onClick={choose(() => props.onMove(-1))}>
+                Move up
+              </button>
+              <button type="button" role="menuitem" disabled={index === count - 1} onClick={choose(() => props.onMove(1))}>
+                Move down
+              </button>
+              <button type="button" role="menuitem" onClick={choose(props.onDuplicate)}>
+                Duplicate
+              </button>
+              <button type="button" role="menuitem" className="danger" onClick={choose(props.onRemove)}>
+                Delete exercise
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       {exercise.sets.length > 0 && (
@@ -140,7 +172,7 @@ export function ExerciseCard(props: Props) {
       </div>
 
       <details>
-        <summary>Rest, notes and more</summary>
+        <summary>Rest and notes</summary>
         <label className="field">
           <span className="muted">Rest between sets (sec)</span>
           <NumberField label={`Rest for ${title} in seconds`} value={exercise.restSeconds} integer onChange={(restSeconds) => props.onChange({ restSeconds })} />
@@ -154,12 +186,6 @@ export function ExerciseCard(props: Props) {
             onChange={(e) => props.onChange({ notes: e.currentTarget.value })}
           />
         </label>
-        <div className="row-actions">
-          <button type="button" onClick={props.onDuplicate}>
-            Duplicate
-          </button>
-          <ConfirmButton label="Remove exercise" confirmLabel="Confirm" onConfirm={props.onRemove} />
-        </div>
       </details>
     </li>
   );

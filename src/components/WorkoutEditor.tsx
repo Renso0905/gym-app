@@ -10,13 +10,14 @@ interface Props {
   canStart: boolean;
   onChange: (workout: Workout) => void;
   onAddExercises: () => void;
+  onReplaceExercise: (exerciseId: string) => void;
   onStart: () => void;
   onDone: () => void;
   onDelete: () => void;
 }
 
 /** Edits a routine: the outline of a workout, with optional target numbers per set. */
-export function WorkoutEditor({ workout, unit, saveFailed, canStart, onChange, onAddExercises, onStart, onDone, onDelete }: Props) {
+export function WorkoutEditor({ workout, unit, saveFailed, canStart, onChange, onAddExercises, onReplaceExercise, onStart, onDone, onDelete }: Props) {
   return (
     <main className="screen">
       <header className="bar">
@@ -51,7 +52,7 @@ export function WorkoutEditor({ workout, unit, saveFailed, canStart, onChange, o
       {workout.exercises.length === 0 ? (
         <p className="empty">Add the exercises for this routine. Set the number of sets now; fill in target numbers only if you want them.</p>
       ) : (
-        <ExerciseList plan={workout} unit={unit} mode="plan" onChange={onChange} />
+        <ExerciseList plan={workout} unit={unit} mode="plan" onChange={onChange} onReplace={onReplaceExercise} />
       )}
 
       <button type="button" className="primary wide" onClick={onAddExercises}>

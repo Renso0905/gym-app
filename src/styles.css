@@ -547,3 +547,43 @@ button.prev:disabled {
 .logged-sets li {
   padding: 2px 0;
 }
+
+/* --- exercise options menu ------------------------------------------------ */
+
+.exercise-head {
+  position: relative;
+}
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+}
+
+.menu {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  z-index: 6;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+.menu button {
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--line);
+  background: none;
+  text-align: left;
+  min-height: 48px;
+}
+
+.menu button:last-child {
+  border-bottom: none;
+}

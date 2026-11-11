@@ -119,3 +119,46 @@ export function formatElapsed(ms: number): string {
   const s = String(total % 60).padStart(2, '0');
   return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${s}` : `${m}:${s}`;
 }
+
+// --- keeping the routine in step with what was actually done (R12) ----------
+
+/**
+ * How a finished session differs in structure from the routine it started
+ * from: exercises added, skipped or reordered, and exercises with a different
+ * number of sets (which includes planned sets that were never ticked).
+ * Different weights or reps alone are not a change to the routine.
+ * Each entry is a short line to show the lifter; empty means no change.
+ */
+export function routineChanges(routine: Workout, finished: Session): string[] {
+  const label = (e: Exercise) => e.name.trim() || 'Exercise';
+  const sets = (n: number) => `${n} set${n === 1 ? '' : 's'}`;
+  const remaining = [...finished.exercises];
+  const changes: string[] = [];
+  const kept: string[] = [];
+
+  for (const planned of routine.exercises) {
+    const at = remaining.findIndex((e) => exerciseKey(e) === exerciseKey(planned));
+    if (at === -1) {
+      changes.push(`Skipped ${label(planned)}`);
+      continue;
+    }
+    const [done] = remaining.splice(at, 1);
+    kept.push(done.id);
+    if (done.sets.length !== planned.sets.length) {
+      changes.push(`${label(planned)}: ${sets(planned.sets.length)} planned, ${done.sets.length} done`);
+    }
+  }
+  for (const extra of remaining) changes.push(`Added ${label(extra)}`);
+
+  const doneOrder = finished.exercises.filter((e) => kept.includes(e.id)).map((e) => e.id);
+  if (doneOrder.join() !== kept.join()) changes.push('Exercises done in a different order');
+  return changes;
+}
+
+/**
+ * The routine rewritten to match a finished session: its exercises, order,
+ * set counts and numbers. The routine keeps its own identity, name and notes.
+ */
+export function applySessionToRoutine(routine: Workout, finished: Session, now: number): Workout {
+  return { ...routine, exercises: finished.exercises.map(copyExercise), updatedAt: now };
+}

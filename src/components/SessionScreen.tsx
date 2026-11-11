@@ -12,6 +12,7 @@ interface Props {
   saveFailed: boolean;
   onChange: (session: Session) => void;
   onAddExercises: () => void;
+  onReplaceExercise: (exerciseId: string) => void;
   onFinish: () => void;
   onDiscard: () => void;
   onBack: () => void;
@@ -31,7 +32,7 @@ function Clock({ since }: { since: number }) {
 }
 
 /** A workout being performed: fill in the numbers, tick each set, then finish. */
-export function SessionScreen({ session, history, unit, saveFailed, onChange, onAddExercises, onFinish, onDiscard, onBack }: Props) {
+export function SessionScreen({ session, history, unit, saveFailed, onChange, onAddExercises, onReplaceExercise, onFinish, onDiscard, onBack }: Props) {
   const done = doneSetCount(session);
 
   return (
@@ -73,6 +74,7 @@ export function SessionScreen({ session, history, unit, saveFailed, onChange, on
           mode="log"
           history={history}
           onChange={onChange}
+          onReplace={onReplaceExercise}
           onToggleDone={(exerciseId, setId, previous) => onChange(toggleSetDone(session, exerciseId, setId, previous, Date.now()))}
         />
       )}
