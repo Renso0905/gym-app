@@ -11,9 +11,13 @@ A set records an exercise name, a rep count and a weight in kilograms.
   and weight is a finite number of 0 or more (0 covers bodyweight exercises).
 - Invalid sets are never displayed or counted.
 
+### R2 Workout volume
+The app shows the total training volume of a workout.
+- Volume is the sum of reps x weight (kg) over the valid sets.
+- Invalid sets contribute nothing; an empty workout has volume 0.
+
 ## Planned
 
-- R2 Workout volume: total of reps x weight across the valid sets of a workout.
 - R3 Log a workout: add, edit and remove sets for today.
 - R4 History: see past workouts by date.
 - R5 Offline use: data stays on the device and the app works without a network.
