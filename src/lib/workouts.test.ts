@@ -37,7 +37,7 @@ describe('creating', () => {
     const w = createWorkout(42, 'id');
     expect(w).toEqual({ id: 'id', name: '', notes: '', exercises: [], createdAt: 42, updatedAt: 42 });
     expect(isBlankWorkout(w)).toBe(true);
-    expect(displayName(w)).toBe('Untitled workout');
+    expect(displayName(w)).toBe('Untitled routine');
   });
 
   it('starts an exercise with one empty set ready to fill in', () => {
@@ -207,7 +207,7 @@ describe('the list of workouts', () => {
   });
 
   it('names a copy of an unnamed workout sensibly', () => {
-    expect(duplicateWorkout(createWorkout(1), 2).name).toBe('Untitled workout (copy)');
+    expect(duplicateWorkout(createWorkout(1), 2).name).toBe('Untitled routine (copy)');
   });
 });
 

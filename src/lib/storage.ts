@@ -1,10 +1,15 @@
 // Saving and loading on the device. Loading is tolerant: damaged data is
 // repaired or skipped, never thrown, so a bad save cannot lock the user out.
+import { EQUIPMENT, MUSCLES, type Equipment, type ExerciseDef, type Muscle } from './exercises';
+import type { Session } from './sessions';
 import { cleanNumber, EXERCISE_KINDS, newId } from './workouts';
 import type { Exercise, ExerciseKind, PlannedSet, Workout } from './workouts';
 
 export const WORKOUTS_KEY = 'gym.workouts.v1';
 export const UNIT_KEY = 'gym.unit.v1';
+export const SESSIONS_KEY = 'gym.sessions.v1';
+export const ACTIVE_KEY = 'gym.active.v1';
+export const CUSTOM_EXERCISES_KEY = 'gym.exercises.v1';
 
 export type WeightUnit = 'lb' | 'kg';
 
@@ -30,6 +35,7 @@ function parseSet(raw: unknown): PlannedSet | null {
   if (reps !== undefined) set.reps = reps;
   if (seconds !== undefined) set.seconds = seconds;
   if (distance !== undefined) set.distance = distance;
+  if (raw.done === true) set.done = true;
   return set;
 }
 
@@ -44,6 +50,7 @@ function parseExercise(raw: unknown): Exercise | null {
   };
   const rest = cleanNumber(raw.restSeconds, true);
   if (rest !== undefined) exercise.restSeconds = rest;
+  if (typeof raw.defId === 'string' && raw.defId !== '') exercise.defId = raw.defId;
   return exercise;
 }
 
@@ -115,4 +122,93 @@ export function saveUnit(store: KeyValueStore, unit: WeightUnit): boolean {
   } catch {
     return false;
   }
+}
+
+// --- sessions (R3, R4) -----------------------------------------------------
+
+function parseSession(raw: unknown): Session | null {
+  const base = parseWorkout(raw);
+  if (!base || !isRecord(raw)) return null;
+  const session: Session = { ...base, startedAt: cleanNumber(raw.startedAt) ?? base.createdAt };
+  const finishedAt = cleanNumber(raw.finishedAt);
+  if (finishedAt !== undefined) session.finishedAt = finishedAt;
+  if (typeof raw.routineId === 'string' && raw.routineId !== '') session.routineId = raw.routineId;
+  return session;
+}
+
+function readJson(store: KeyValueStore, key: string): unknown {
+  try {
+    const raw = store.getItem(key);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeJson(store: KeyValueStore, key: string, value: unknown): boolean {
+  try {
+    store.setItem(key, JSON.stringify(value));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Finished sessions. Anything unreadable or unfinished is skipped. */
+export function loadHistory(store: KeyValueStore): Session[] {
+  const data = readJson(store, SESSIONS_KEY);
+  const list = isRecord(data) ? data.sessions : null;
+  if (!Array.isArray(list)) return [];
+  const seen = new Set<string>();
+  return list
+    .map(parseSession)
+    .filter((s) => s !== null)
+    .filter((s) => s.finishedAt !== undefined)
+    .filter((s) => (seen.has(s.id) ? false : (seen.add(s.id), true)));
+}
+
+export function saveHistory(store: KeyValueStore, sessions: Session[]): boolean {
+  return writeJson(store, SESSIONS_KEY, { version: 1, sessions });
+}
+
+/** The workout in progress, if the app was closed during one. */
+export function loadActiveSession(store: KeyValueStore): Session | null {
+  const data = readJson(store, ACTIVE_KEY);
+  const session = isRecord(data) ? parseSession(data.session) : null;
+  return session && session.finishedAt === undefined ? session : null;
+}
+
+export function saveActiveSession(store: KeyValueStore, session: Session | null): boolean {
+  return writeJson(store, ACTIVE_KEY, { version: 1, session });
+}
+
+// --- custom exercises (R8) -------------------------------------------------
+
+function parseExerciseDef(raw: unknown): ExerciseDef | null {
+  if (!isRecord(raw) || typeof raw.id !== 'string' || raw.id === '') return null;
+  const name = text(raw.name).trim();
+  if (name === '') return null;
+  return {
+    id: raw.id,
+    name,
+    muscle: (MUSCLES as readonly string[]).includes(text(raw.muscle)) ? (raw.muscle as Muscle) : 'Full body',
+    equipment: (EQUIPMENT as readonly string[]).includes(text(raw.equipment)) ? (raw.equipment as Equipment) : 'Other',
+    kind: typeof raw.kind === 'string' && kinds.has(raw.kind) ? (raw.kind as ExerciseKind) : 'weight-reps',
+    custom: true,
+  };
+}
+
+export function loadCustomExercises(store: KeyValueStore): ExerciseDef[] {
+  const data = readJson(store, CUSTOM_EXERCISES_KEY);
+  const list = isRecord(data) ? data.exercises : null;
+  if (!Array.isArray(list)) return [];
+  const seen = new Set<string>();
+  return list
+    .map(parseExerciseDef)
+    .filter((d) => d !== null)
+    .filter((d) => (seen.has(d.id) ? false : (seen.add(d.id), true)));
+}
+
+export function saveCustomExercises(store: KeyValueStore, exercises: ExerciseDef[]): boolean {
+  return writeJson(store, CUSTOM_EXERCISES_KEY, { version: 1, exercises });
 }
