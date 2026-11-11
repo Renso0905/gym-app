@@ -1,0 +1,15 @@
+# Quality control is supplied by the central factory. Do not add checks here;
+# add them to Renso0905/ai-factory so every project gets them.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  factory:
+    uses: Renso0905/ai-factory/.github/workflows/project-ci.yml@v1

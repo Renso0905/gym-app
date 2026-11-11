@@ -1,0 +1,5 @@
+{
+  "boundaries": [
+    { "from": "src/lib", "forbid": ["react", "react-dom"] }
+  ]
+}

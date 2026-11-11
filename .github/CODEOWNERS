@@ -1,0 +1,5 @@
+# The human owner reviews everything; quality-control files are listed explicitly.
+* @Renso0905
+/.github/ @Renso0905
+/.claude/ @Renso0905
+/factory.config.json @Renso0905
