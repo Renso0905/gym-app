@@ -1,4 +1,5 @@
 import { isValidSet, type WorkoutSet } from './lib/sets';
+import { totalVolume } from './lib/volume';
 
 const SAMPLE_SETS: WorkoutSet[] = [
   { exercise: 'Squat', reps: 5, weightKg: 100 },
@@ -17,6 +18,7 @@ export function App() {
           </li>
         ))}
       </ul>
+      <p>Total volume: {totalVolume(sets)} kg</p>
     </main>
   );
 }
