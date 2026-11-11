@@ -45,4 +45,6 @@ exist so you do not waste a run hitting them.
 - Domain logic goes in `src/lib` and must not import React (factory rule A001).
 - Every requirement in `docs/REQUIREMENTS.md` has an id; name it in the PR and
   move it from Planned to Implemented when its tests pass.
-- Weights are kilograms.
+- Weights are unit-neutral numbers; lb or kg is a display setting (default lb).
+- Editing rules are pure functions in `src/lib/workouts.ts`; keep components thin.
+- Check UI changes in a phone-sized browser (375px wide) before opening a PR.
