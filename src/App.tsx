@@ -1,14 +1,16 @@
 import { useMemo, useState } from 'react';
 import { ExercisePicker } from './components/ExercisePicker';
+import { RoutineUpdatePrompt } from './components/RoutineUpdatePrompt';
 import { HistoryDetail, HistoryList } from './components/History';
 import { SessionScreen } from './components/SessionScreen';
 import { WorkoutEditor } from './components/WorkoutEditor';
 import { WorkoutList } from './components/WorkoutList';
 import { allExercises, type ExerciseDef } from './lib/exercises';
-import { finishSession, startSession } from './lib/sessions';
+import { applySessionToRoutine, finishSession, routineChanges, startSession } from './lib/sessions';
 import {
   addExercises,
   createWorkout,
+  displayName,
   duplicateWorkout,
   exerciseFromDef,
   insertAfter,
@@ -32,6 +34,8 @@ export function App() {
   const [tab, setTab] = useState<'routines' | 'history'>('routines');
   const [screen, setScreen] = useState<Screen>({ name: 'home' });
   const [picking, setPicking] = useState<null | { replace?: string }>(null);
+  // Set after finishing a workout that differed from its routine, until the lifter answers.
+  const [pendingUpdate, setPendingUpdate] = useState<null | { routineId: string; sessionId: string; changes: string[] }>(null);
   const library = useMemo(() => allExercises(data.customExercises), [data.customExercises]);
 
   const go = (next: Screen) => {
@@ -93,6 +97,9 @@ export function App() {
           const finished = finishSession(active, Date.now());
           if (!finished) return;
           setHistory((list) => [finished, ...list]);
+          const from = routines.find((r) => r.id === finished.routineId);
+          const changes = from ? routineChanges(from, finished) : [];
+          setPendingUpdate(from && changes.length > 0 ? { routineId: from.id, sessionId: finished.id, changes } : null);
           setActive(null);
           setTab('history');
           go({ name: 'history-detail', id: finished.id });
@@ -127,7 +134,10 @@ export function App() {
   }
 
   if (past) {
+    const prompt = pendingUpdate?.sessionId === past.id ? pendingUpdate : null;
+    const promptRoutine = prompt ? routines.find((r) => r.id === prompt.routineId) : undefined;
     return (
+      <>
       <HistoryDetail
         session={past}
         unit={unit}
@@ -137,6 +147,18 @@ export function App() {
           go({ name: 'home' });
         }}
       />
+      {prompt && promptRoutine && (
+        <RoutineUpdatePrompt
+          routineName={displayName(promptRoutine)}
+          changes={prompt.changes}
+          onKeep={() => setPendingUpdate(null)}
+          onUpdate={() => {
+            setRoutines((list) => upsertWorkout(list, applySessionToRoutine(promptRoutine, past, Date.now())));
+            setPendingUpdate(null);
+          }}
+        />
+      )}
+      </>
     );
   }
 

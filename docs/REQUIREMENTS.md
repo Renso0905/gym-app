@@ -25,8 +25,10 @@ The outline of a workout, built and edited freely.
 - Any number of routines. Each has a name, notes and any number of exercises.
 - Exercises are added from the exercise library (R8). Each has any number of
   sets, optional target numbers per set, optional rest time and notes.
-- Exercises can be removed, duplicated and moved up or down. Sets can be added
-  and removed; a new set starts with the previous set's values.
+- Each exercise has an options menu (the ⋯ button) to replace it, move it up or
+  down, duplicate it or delete it. Replacing keeps the position and number of
+  sets; numbers are kept only when both exercises are measured the same way.
+- Sets can be added and removed; a new set starts with the previous set's values.
 - Routines can be edited, duplicated and deleted. Deleting needs a second tap.
 - Every change is saved to the device immediately and survives a reload. If the
   device refuses the save, the screen says so.
@@ -65,6 +67,16 @@ The outline of a workout, built and edited freely.
   volume.
 - A session can be opened to see every logged set, and deleted with a second tap.
 
+### R12 Keep the routine in step
+- When a finished session differs in structure from its routine, the app lists
+  the differences and asks whether to update the routine or keep it as it was.
+  The session is saved either way.
+- Differences are: an exercise added, skipped or replaced; a different number of
+  sets for an exercise, including planned sets left unticked; a different order.
+- Different weights, reps, times or distances alone do not trigger the question.
+- Updating makes the routine match the session: exercises, order, set counts and
+  the numbers lifted. The routine keeps its name and notes.
+
 ## Planned
 
 - R5 Offline use: the app loads without a network (service worker).
@@ -72,7 +84,6 @@ The outline of a workout, built and edited freely.
 - R9 Rest timer between sets.
 - R10 Progress per exercise: personal records and charts.
 - R11 Edit a finished session.
-- R12 Update a routine from a finished session.
 
 ## Out of scope for now
 

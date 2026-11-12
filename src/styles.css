@@ -587,3 +587,47 @@ button.prev:disabled {
 .menu button:last-child {
   border-bottom: none;
 }
+
+/* --- routine update prompt ------------------------------------------------ */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal {
+  width: 100%;
+  max-width: 640px;
+  max-height: 85vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 16px calc(env(safe-area-inset-bottom) + 20px);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px 18px 0 0;
+}
+
+.modal h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.modal p {
+  margin: 0;
+}
+
+.change-list {
+  margin: 0 0 6px;
+  padding-left: 1.25rem;
+}
+
+.change-list li {
+  padding: 2px 0;
+}
