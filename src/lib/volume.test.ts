@@ -7,14 +7,14 @@ describe('totalVolume (R2)', () => {
   });
 
   it('multiplies reps by weight for a single set', () => {
-    expect(totalVolume([{ exercise: 'Squat', reps: 5, weightKg: 100 }])).toBe(500);
+    expect(totalVolume([{ exercise: 'Squat', reps: 5, weight: 100 }])).toBe(500);
   });
 
   it('sums across sets', () => {
     expect(
       totalVolume([
-        { exercise: 'Squat', reps: 5, weightKg: 100 },
-        { exercise: 'Bench press', reps: 8, weightKg: 60 },
+        { exercise: 'Squat', reps: 5, weight: 100 },
+        { exercise: 'Bench press', reps: 8, weight: 60 },
       ]),
     ).toBe(980);
   });
@@ -22,14 +22,14 @@ describe('totalVolume (R2)', () => {
   it('ignores invalid sets', () => {
     expect(
       totalVolume([
-        { exercise: 'Squat', reps: 5, weightKg: 100 },
-        { exercise: '', reps: 5, weightKg: 100 },
-        { exercise: 'Squat', reps: -3, weightKg: 100 },
+        { exercise: 'Squat', reps: 5, weight: 100 },
+        { exercise: '', reps: 5, weight: 100 },
+        { exercise: 'Squat', reps: -3, weight: 100 },
       ]),
     ).toBe(500);
   });
 
   it('counts bodyweight sets as zero volume', () => {
-    expect(totalVolume([{ exercise: 'Pull-up', reps: 10, weightKg: 0 }])).toBe(0);
+    expect(totalVolume([{ exercise: 'Pull-up', reps: 10, weight: 0 }])).toBe(0);
   });
 });

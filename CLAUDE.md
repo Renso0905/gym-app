@@ -45,4 +45,9 @@ exist so you do not waste a run hitting them.
 - Domain logic goes in `src/lib` and must not import React (factory rule A001).
 - Every requirement in `docs/REQUIREMENTS.md` has an id; name it in the PR and
   move it from Planned to Implemented when its tests pass.
-- Weights are kilograms.
+- Weights are unit-neutral numbers; lb or kg is a display setting (default lb).
+- A routine is the outline; a session is a workout performed on a day. Both use
+  the editing functions in `src/lib/workouts.ts`; keep components thin.
+- If a file edit does not show up in the dev server, restart it; Vite has missed
+  appended changes on this Windows drive before.
+- Check UI changes in a phone-sized browser (375px wide) before opening a PR.

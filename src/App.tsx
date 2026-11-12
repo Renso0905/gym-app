@@ -1,24 +1,202 @@
-import { isValidSet, type WorkoutSet } from './lib/sets';
-import { totalVolume } from './lib/volume';
+import { useMemo, useState } from 'react';
+import { ExercisePicker } from './components/ExercisePicker';
+import { RoutineUpdatePrompt } from './components/RoutineUpdatePrompt';
+import { HistoryDetail, HistoryList } from './components/History';
+import { SessionScreen } from './components/SessionScreen';
+import { WorkoutEditor } from './components/WorkoutEditor';
+import { WorkoutList } from './components/WorkoutList';
+import { allExercises, type ExerciseDef } from './lib/exercises';
+import { applySessionToRoutine, finishSession, routineChanges, startSession } from './lib/sessions';
+import {
+  addExercises,
+  createWorkout,
+  displayName,
+  duplicateWorkout,
+  exerciseFromDef,
+  insertAfter,
+  isBlankWorkout,
+  removeWorkout,
+  replaceExercise,
+  upsertWorkout,
+  type Workout,
+} from './lib/workouts';
+import { useAppData } from './state/useAppData';
 
-const SAMPLE_SETS: WorkoutSet[] = [
-  { exercise: 'Squat', reps: 5, weightKg: 100 },
-  { exercise: 'Bench press', reps: 8, weightKg: 60 },
-];
+type Screen =
+  | { name: 'home' }
+  | { name: 'routine'; id: string }
+  | { name: 'session' }
+  | { name: 'history-detail'; id: string };
 
 export function App() {
-  const sets = SAMPLE_SETS.filter(isValidSet);
+  const data = useAppData();
+  const { routines, setRoutines, history, setHistory, active, setActive, unit } = data;
+  const [tab, setTab] = useState<'routines' | 'history'>('routines');
+  const [screen, setScreen] = useState<Screen>({ name: 'home' });
+  const [picking, setPicking] = useState<null | { replace?: string }>(null);
+  // Set after finishing a workout that differed from its routine, until the lifter answers.
+  const [pendingUpdate, setPendingUpdate] = useState<null | { routineId: string; sessionId: string; changes: string[] }>(null);
+  const library = useMemo(() => allExercises(data.customExercises), [data.customExercises]);
+
+  const go = (next: Screen) => {
+    setScreen(next);
+    window.scrollTo(0, 0);
+  };
+
+  const routine = screen.name === 'routine' ? routines.find((w) => w.id === screen.id) : undefined;
+  const past = screen.name === 'history-detail' ? history.find((s) => s.id === screen.id) : undefined;
+
+  function start(from: Workout | null) {
+    if (active) return;
+    setActive(startSession(from, Date.now()));
+    go({ name: 'session' });
+  }
+
+  function addPicked(defs: ExerciseDef[]) {
+    const swap = picking?.replace;
+    if (swap && defs[0]) {
+      if (screen.name === 'session' && active) setActive(replaceExercise(active, swap, defs[0], Date.now()));
+      else if (routine) setRoutines((list) => upsertWorkout(list, replaceExercise(routine, swap, defs[0], Date.now())));
+      setPicking(null);
+      return;
+    }
+    const exercises = defs.map((def) => exerciseFromDef(def));
+    if (screen.name === 'session' && active) setActive(addExercises(active, exercises, Date.now()));
+    else if (routine) setRoutines((list) => upsertWorkout(list, addExercises(routine, exercises, Date.now())));
+    setPicking(null);
+  }
+
+  if (picking) {
+    return (
+      <ExercisePicker
+        exercises={library}
+        mode={picking.replace ? 'replace' : 'add'}
+        onAdd={addPicked}
+        onCreateCustom={(def) => data.setCustomExercises((list) => [...list, def])}
+        onCancel={() => setPicking(null)}
+      />
+    );
+  }
+
+  if (screen.name === 'session' && active) {
+    return (
+      <SessionScreen
+        session={active}
+        history={history}
+        unit={unit}
+        saveFailed={data.saveFailed}
+        onChange={setActive}
+        onAddExercises={() => setPicking({})}
+        onReplaceExercise={(id) => setPicking({ replace: id })}
+        onBack={() => go({ name: 'home' })}
+        onDiscard={() => {
+          setActive(null);
+          go({ name: 'home' });
+        }}
+        onFinish={() => {
+          const finished = finishSession(active, Date.now());
+          if (!finished) return;
+          setHistory((list) => [finished, ...list]);
+          const from = routines.find((r) => r.id === finished.routineId);
+          const changes = from ? routineChanges(from, finished) : [];
+          setPendingUpdate(from && changes.length > 0 ? { routineId: from.id, sessionId: finished.id, changes } : null);
+          setActive(null);
+          setTab('history');
+          go({ name: 'history-detail', id: finished.id });
+        }}
+      />
+    );
+  }
+
+  if (routine) {
+    return (
+      <WorkoutEditor
+        key={routine.id}
+        workout={routine}
+        unit={unit}
+        saveFailed={data.saveFailed}
+        canStart={active === null}
+        onChange={(next) => setRoutines((list) => upsertWorkout(list, next))}
+        onAddExercises={() => setPicking({})}
+        onReplaceExercise={(id) => setPicking({ replace: id })}
+        onStart={() => start(routine)}
+        onDone={() => {
+          // A routine left completely empty was a false start, not something to keep.
+          if (isBlankWorkout(routine)) setRoutines((list) => removeWorkout(list, routine.id));
+          go({ name: 'home' });
+        }}
+        onDelete={() => {
+          setRoutines((list) => removeWorkout(list, routine.id));
+          go({ name: 'home' });
+        }}
+      />
+    );
+  }
+
+  if (past) {
+    const prompt = pendingUpdate?.sessionId === past.id ? pendingUpdate : null;
+    const promptRoutine = prompt ? routines.find((r) => r.id === prompt.routineId) : undefined;
+    return (
+      <>
+      <HistoryDetail
+        session={past}
+        unit={unit}
+        onBack={() => go({ name: 'home' })}
+        onDelete={() => {
+          setHistory((list) => removeWorkout(list, past.id));
+          go({ name: 'home' });
+        }}
+      />
+      {prompt && promptRoutine && (
+        <RoutineUpdatePrompt
+          routineName={displayName(promptRoutine)}
+          changes={prompt.changes}
+          onKeep={() => setPendingUpdate(null)}
+          onUpdate={() => {
+            setRoutines((list) => upsertWorkout(list, applySessionToRoutine(promptRoutine, past, Date.now())));
+            setPendingUpdate(null);
+          }}
+        />
+      )}
+      </>
+    );
+  }
+
   return (
-    <main>
-      <h1>Gym Tracker</h1>
-      <ul>
-        {sets.map((set, i) => (
-          <li key={i}>
-            {set.exercise}: {set.reps} x {set.weightKg} kg
-          </li>
-        ))}
-      </ul>
-      <p>Total volume: {totalVolume(sets)} kg</p>
-    </main>
+    <>
+      {tab === 'routines' ? (
+        <WorkoutList
+          workouts={routines}
+          active={active}
+          unit={unit}
+          onUnitChange={data.setUnit}
+          onCreate={() => {
+            const created = createWorkout(Date.now());
+            setRoutines((list) => upsertWorkout(list, created));
+            go({ name: 'routine', id: created.id });
+          }}
+          onOpen={(id) => go({ name: 'routine', id })}
+          onDuplicate={(id) =>
+            setRoutines((list) => {
+              const original = list.find((w) => w.id === id);
+              return original ? insertAfter(list, id, duplicateWorkout(original, Date.now())) : list;
+            })
+          }
+          onDelete={(id) => setRoutines((list) => removeWorkout(list, id))}
+          onStart={start}
+          onResume={() => go({ name: 'session' })}
+        />
+      ) : (
+        <HistoryList history={history} unit={unit} onOpen={(id) => go({ name: 'history-detail', id })} />
+      )}
+      <nav className="tabs" aria-label="Sections">
+        <button type="button" aria-current={tab === 'routines' ? 'page' : undefined} onClick={() => setTab('routines')}>
+          Routines
+        </button>
+        <button type="button" aria-current={tab === 'history' ? 'page' : undefined} onClick={() => setTab('history')}>
+          History
+        </button>
+      </nav>
+    </>
   );
 }
