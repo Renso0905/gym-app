@@ -38,6 +38,7 @@ is sent to a server.
 | `gym.exercises.v1` | Custom exercises |
 | `gym.unit.v1` | `lb` or `kg` |
 | `gym.sleep.v1` | Hours slept, as `{ version, nights }` with one `YYYY-MM-DD: hours` entry per night |
+| `gym.nutrition.v1` | Nutrition goals and daily food entries, as `{ version, goals, days }` keyed by `YYYY-MM-DD` |
 
 `src/lib/storage.ts` owns the formats; loading repairs or skips damaged data.
 Change the key or bump the version when a format changes incompatibly.
@@ -72,4 +73,7 @@ GitHub environment, which requires approval from the repository owner.
   empty for now. A widget is an id, a title and a render function.
 - Sleep is keyed by local calendar day (`YYYY-MM-DD`), not by a timestamp, so
   an entry stays on its day when the time zone or clock changes.
+- Nutrition entries use the same local calendar-day keys as sleep. Calorie,
+  protein and fiber totals are derived from food entries rather than saved, so
+  removing or repairing an entry cannot leave stale totals behind.
 - The web manifest exists, but there is no service worker until R5.

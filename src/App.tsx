@@ -3,6 +3,7 @@ import { ExercisePicker } from './components/ExercisePicker';
 import { RoutineUpdatePrompt } from './components/RoutineUpdatePrompt';
 import { HistoryDetail, HistoryList } from './components/History';
 import { Home } from './components/Home';
+import { NutritionScreen } from './components/Nutrition';
 import { ExerciseProgressScreen, ProgressScreen } from './components/Progress';
 import { SessionScreen } from './components/SessionScreen';
 import { SleepScreen } from './components/Sleep';
@@ -37,6 +38,7 @@ const TABS = [
   { id: 'home', label: 'Home' },
   { id: 'routines', label: 'Routines' },
   { id: 'progress', label: 'Progress' },
+  { id: 'nutrition', label: 'Nutrition' },
   { id: 'sleep', label: 'Sleep' },
 ] as const;
 type Tab = (typeof TABS)[number]['id'];
@@ -197,6 +199,8 @@ export function App() {
         />
       ) : tab === 'sleep' ? (
         <SleepScreen sleep={data.sleep} saveFailed={data.saveFailed} onChange={data.setSleep} />
+      ) : tab === 'nutrition' ? (
+        <NutritionScreen nutrition={data.nutrition} saveFailed={data.saveFailed} onChange={data.setNutrition} />
       ) : (
         <WorkoutList
           workouts={routines}
