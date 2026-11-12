@@ -152,6 +152,13 @@ A daily food log with one set of goals shared across days.
   added manually to the selected day or removed from that day's log.
 - The day shows calorie progress and the amount remaining or over goal. Protein
   and fiber totals are shown with progress when their goals are set.
+- A Previous days button opens a Monday-first month calendar. Days without food
+  are grey. Tracked days are red at 50% or less of the calorie goal, yellow
+  above 50% and below 80%, green from 80% up to 95%, turquoise from 95% through
+  110%, and red again when over 110%.
+- Selecting today or an earlier calendar day opens its food log. From an earlier
+  day, one food or the whole day can be copied into today's log without changing
+  the original entries.
 - A food search field is present and clearly marked as waiting for the future
   food database connection; manual entry remains available.
 - Goals and food logs are saved to the device immediately and survive a reload.

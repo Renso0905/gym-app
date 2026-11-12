@@ -6,6 +6,8 @@ import {
   createFoodEntry,
   emptyNutrition,
   formatNutritionAmount,
+  nutritionDayBand,
+  nutritionMonthCalendar,
   nutritionTotals,
   removeFood,
   setNutritionGoals,
@@ -78,6 +80,43 @@ describe('daily food log', () => {
     expect(shiftDayKey('2026-12-31', 1)).toBe('2027-01-01');
     expect(shiftDayKey('bad', 1)).toBe('bad');
     expect(formatNutritionAmount(12.345)).toBe('12.35');
+  });
+
+  it('colours tracked days by their share of the calorie goal', () => {
+    const food = (calories: number, id: string) => ({ id, name: id, calories });
+    const data = {
+      goals: { calories: 2000 },
+      days: {
+        '2026-11-01': [food(0, 'zero')],
+        '2026-11-02': [food(1000, 'half')],
+        '2026-11-03': [food(1200, 'yellow')],
+        '2026-11-04': [food(1599, 'gap')],
+        '2026-11-05': [food(1600, 'green')],
+        '2026-11-06': [food(1900, 'target')],
+        '2026-11-07': [food(2200, 'top')],
+        '2026-11-08': [food(2201, 'over')],
+      },
+    };
+    expect(nutritionDayBand(data, '2026-10-31')).toBe('none');
+    expect(nutritionDayBand(data, '2026-11-01')).toBe('low');
+    expect(nutritionDayBand(data, '2026-11-02')).toBe('low');
+    expect(nutritionDayBand(data, '2026-11-03')).toBe('mid');
+    expect(nutritionDayBand(data, '2026-11-04')).toBe('mid');
+    expect(nutritionDayBand(data, '2026-11-05')).toBe('good');
+    expect(nutritionDayBand(data, '2026-11-06')).toBe('target');
+    expect(nutritionDayBand(data, '2026-11-07')).toBe('target');
+    expect(nutritionDayBand(data, '2026-11-08')).toBe('over');
+  });
+
+  it('builds a Monday-first calorie calendar and marks future days', () => {
+    const data = addFood(emptyNutrition(), '2026-11-10', { id: 'lunch', name: 'Lunch', calories: 1500 });
+    const now = new Date(2026, 10, 11, 9).getTime();
+    const weeks = nutritionMonthCalendar(data, 2026, 10, now);
+    expect(weeks).toHaveLength(6);
+    expect(weeks[0].map((day) => day?.day ?? null)).toEqual([null, null, null, null, null, null, 1]);
+    expect(weeks.flat().find((day) => day?.day === 10)).toMatchObject({ calories: 1500, percent: 75, band: 'mid', when: 'past' });
+    expect(weeks.flat().find((day) => day?.day === 11)).toMatchObject({ calories: 0, percent: 0, band: 'none', when: 'today' });
+    expect(weeks.flat().find((day) => day?.day === 12)?.when).toBe('future');
   });
 });
 

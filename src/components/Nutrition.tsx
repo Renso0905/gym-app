@@ -3,13 +3,14 @@ import {
   addFood,
   createFoodEntry,
   formatNutritionAmount,
+  nutritionMonthCalendar,
   nutritionTotals,
   removeFood,
   setNutritionGoals,
   shiftDayKey,
   type NutritionData,
 } from '../lib/nutrition';
-import { dateKey, parseDayKey } from '../lib/sleep';
+import { dateKey, parseDayKey, shiftMonth } from '../lib/sleep';
 import { newId } from '../lib/workouts';
 import { NumberField } from './NumberField';
 
@@ -18,6 +19,8 @@ interface Props {
   saveFailed: boolean;
   onChange: (next: NutritionData) => void;
 }
+
+const WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 function longDate(key: string): string {
   const parts = parseDayKey(key)!;
@@ -44,10 +47,112 @@ function ProgressBar({ value, goal }: { value: number; goal: number }) {
   );
 }
 
+function PreviousDaysCalendar({
+  nutrition,
+  now,
+  selected,
+  onSelect,
+  onClose,
+}: {
+  nutrition: NutritionData;
+  now: number;
+  selected: string;
+  onSelect: (key: string) => void;
+  onClose: () => void;
+}) {
+  const today = dateKey(now);
+  const current = parseDayKey(today)!;
+  const initial = parseDayKey(selected) ?? current;
+  const [view, setView] = useState({ year: initial.year, month: initial.month });
+  const weeks = nutritionMonthCalendar(nutrition, view.year, view.month, now);
+  const atCurrentMonth = view.year === current.year && view.month === current.month;
+  const monthName = new Date(view.year, view.month, 1).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+
+  return (
+    <div className="modal-backdrop">
+      <section className="modal nutrition-calendar-modal" role="dialog" aria-modal="true" aria-labelledby="nutrition-calendar-title">
+        <header className="bar">
+          <div>
+            <p className="eyebrow">Food history</p>
+            <h2 id="nutrition-calendar-title">Previous days</h2>
+          </div>
+          <button type="button" className="icon" aria-label="Close calendar" onClick={onClose}>
+            ×
+          </button>
+        </header>
+        <div className="month-nav">
+          <button
+            type="button"
+            className="icon"
+            aria-label="Previous month"
+            onClick={() => setView(shiftMonth(view.year, view.month, -1))}
+          >
+            ‹
+          </button>
+          <h3>{monthName}</h3>
+          <button
+            type="button"
+            className="icon"
+            aria-label="Next month"
+            disabled={atCurrentMonth}
+            onClick={() => setView(shiftMonth(view.year, view.month, 1))}
+          >
+            ›
+          </button>
+        </div>
+
+        <div className="nutrition-calendar" role="grid" aria-label={`Nutrition in ${monthName}`}>
+          <div className="nutrition-calendar-row" role="row">
+            {WEEKDAYS.map((name) => (
+              <span key={name} className="calendar-head" role="columnheader" aria-label={name}>
+                {name[0]}
+              </span>
+            ))}
+          </div>
+          {weeks.map((week, i) => (
+            <div key={i} className="nutrition-calendar-row" role="row">
+              {week.map((day, j) =>
+                day === null ? (
+                  <span key={j} role="gridcell" />
+                ) : (
+                  <span key={day.key} role="gridcell">
+                    <button
+                      type="button"
+                      className={`nutrition-day band-${day.band}${day.key === selected ? ' selected' : ''}`}
+                      aria-label={`${longDate(day.key)}, ${day.band === 'none' ? 'no food tracked' : `${formatNutritionAmount(day.calories)} calories, ${day.percent}% of goal`}`}
+                      aria-pressed={day.key === selected}
+                      aria-current={day.when === 'today' ? 'date' : undefined}
+                      disabled={day.when === 'future'}
+                      onClick={() => onSelect(day.key)}
+                    >
+                      <span>{day.day}</span>
+                      {day.band !== 'none' && <small>{day.percent}%</small>}
+                    </button>
+                  </span>
+                ),
+              )}
+            </div>
+          ))}
+        </div>
+
+        <ul className="legend nutrition-legend" aria-label="Calorie goal colours">
+          <li><span className="swatch band-low" />50% or less</li>
+          <li><span className="swatch band-mid" />50–80%</li>
+          <li><span className="swatch band-good" />80–95%</li>
+          <li><span className="swatch band-target" />95–110%</li>
+          <li><span className="swatch band-over" />Over 110%</li>
+          <li><span className="swatch band-none" />No food tracked</li>
+        </ul>
+      </section>
+    </div>
+  );
+}
+
 export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
   const [now] = useState(() => Date.now());
   const today = dateKey(now);
   const [selected, setSelected] = useState(today);
+  const [calendarOpen, setCalendarOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [name, setName] = useState('');
   const [calories, setCalories] = useState<number | undefined>();
@@ -69,6 +174,15 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
     setCalories(undefined);
     setProtein(undefined);
     setFiber(undefined);
+  }
+
+  function addFoodToToday(food: (typeof foods)[number]) {
+    onChange(addFood(nutrition, today, { ...food, id: newId() }));
+  }
+
+  function addDayToToday() {
+    const next = foods.reduce((data, food) => addFood(data, today, { ...food, id: newId() }), nutrition);
+    onChange(next);
   }
 
   return (
@@ -99,6 +213,10 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
           ›
         </button>
       </div>
+      <button type="button" className="previous-days-button" onClick={() => setCalendarOpen(true)}>
+        <span aria-hidden="true">▦</span>
+        Previous days
+      </button>
 
       <section className="calorie-card" aria-label="Calorie progress">
         <div className="calorie-ring">
@@ -219,6 +337,11 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
           <h2 className="section-title">Food log</h2>
           <span className="muted">{foods.length} {foods.length === 1 ? 'item' : 'items'}</span>
         </div>
+        {selected < today && foods.length > 0 && (
+          <button type="button" className="wide" onClick={addDayToToday}>
+            Add this whole day to today
+          </button>
+        )}
         {foods.length === 0 ? (
           <p className="empty compact">Nothing logged yet. Add your first food above.</p>
         ) : (
@@ -237,19 +360,39 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
                   <strong>{formatNutritionAmount(food.calories)}</strong>
                   <span className="muted">kcal</span>
                 </div>
-                <button
-                  type="button"
-                  className="icon danger"
-                  aria-label={`Remove ${food.name}`}
-                  onClick={() => onChange(removeFood(nutrition, selected, food.id))}
-                >
-                  ×
-                </button>
+                <div className="food-actions">
+                  {selected < today && (
+                    <button type="button" className="copy-food" onClick={() => addFoodToToday(food)}>
+                      + Today
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    className="icon danger"
+                    aria-label={`Remove ${food.name}`}
+                    onClick={() => onChange(removeFood(nutrition, selected, food.id))}
+                  >
+                    ×
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
         )}
       </section>
+      {calendarOpen && (
+        <PreviousDaysCalendar
+          nutrition={nutrition}
+          now={now}
+          selected={selected}
+          onSelect={(key) => {
+            setSelected(key);
+            setCalendarOpen(false);
+            window.scrollTo(0, 0);
+          }}
+          onClose={() => setCalendarOpen(false)}
+        />
+      )}
     </main>
   );
 }

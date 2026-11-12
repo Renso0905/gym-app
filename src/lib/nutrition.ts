@@ -1,6 +1,6 @@
 // R17: daily calorie and macro tracking. Nutrition is stored by local
 // calendar day so an entry does not move when the clock or time zone changes.
-import { dayKey, parseDayKey } from './sleep';
+import { dayKey, monthCalendar, parseDayKey } from './sleep';
 
 export interface NutritionGoals {
   calories: number;
@@ -100,6 +100,56 @@ export function nutritionTotals(entries: readonly FoodEntry[]): NutritionTotals 
       fiber: total.fiber + (entry.fiber ?? 0),
     }),
     { calories: 0, protein: 0, fiber: 0 },
+  );
+}
+
+export type NutritionDayBand = 'none' | 'low' | 'mid' | 'good' | 'target' | 'over';
+
+/**
+ * Calendar colour for a day. The yellow band runs through the small 75–80%
+ * gap so every tracked amount has one unambiguous colour. Going above 110%
+ * returns to red as an over-goal warning.
+ */
+export function nutritionDayBand(data: NutritionData, key: string): NutritionDayBand {
+  const entries = data.days[key];
+  if (!entries || entries.length === 0) return 'none';
+  const ratio = nutritionTotals(entries).calories / data.goals.calories;
+  if (ratio <= 0.5) return 'low';
+  if (ratio < 0.8) return 'mid';
+  if (ratio < 0.95) return 'good';
+  if (ratio <= 1.1) return 'target';
+  return 'over';
+}
+
+export interface NutritionCalendarDay {
+  key: string;
+  day: number;
+  when: 'past' | 'today' | 'future';
+  calories: number;
+  percent: number;
+  band: NutritionDayBand;
+}
+
+/** A Monday-first calendar with calorie progress attached to each day. */
+export function nutritionMonthCalendar(
+  data: NutritionData,
+  year: number,
+  month: number,
+  now: number,
+): Array<Array<NutritionCalendarDay | null>> {
+  return monthCalendar({}, year, month, now).map((week) =>
+    week.map((day) => {
+      if (!day) return null;
+      const calories = nutritionTotals(data.days[day.key] ?? []).calories;
+      return {
+        key: day.key,
+        day: day.day,
+        when: day.when,
+        calories,
+        percent: Math.round((calories / data.goals.calories) * 100),
+        band: nutritionDayBand(data, day.key),
+      };
+    }),
   );
 }
 
