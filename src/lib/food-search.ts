@@ -16,6 +16,15 @@ export interface FoodSearchResult {
   sourceUrl: string;
 }
 
+export function foodSearchResultDraft(result: FoodSearchResult) {
+  return {
+    name: result.brand ? `${result.name} — ${result.brand}` : result.name,
+    calories: result.calories,
+    protein: result.protein,
+    fiber: result.fiber,
+  };
+}
+
 const FIELDS = [
   'code',
   'product_name',

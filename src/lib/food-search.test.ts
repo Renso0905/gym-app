@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildFoodSearchUrl, parseFoodSearchResponse, searchFoods } from './food-search';
+import { buildFoodSearchUrl, foodSearchResultDraft, parseFoodSearchResponse, searchFoods } from './food-search';
 
 describe('Open Food Facts search URL', () => {
   it('builds a submit-based search requesting only the fields the app uses', () => {
@@ -39,6 +39,28 @@ describe('Open Food Facts request handling', () => {
     const offline = async (): Promise<Response> => { throw new TypeError('Failed to fetch'); };
     await expect(searchFoods('apple', undefined, limited)).rejects.toThrow('Too many searches');
     await expect(searchFoods('apple', undefined, offline)).rejects.toThrow('Could not reach the food database');
+  });
+});
+
+describe('search result logging', () => {
+  it('creates a log-ready draft with the brand and tracked nutrients', () => {
+    expect(foodSearchResultDraft({
+      id: '123',
+      name: 'Greek Yogurt',
+      brand: 'Example Dairy',
+      basis: '170 g',
+      calories: 120,
+      protein: 20,
+      fiber: 1,
+      carbohydrates: 8,
+      fat: 2.5,
+      sourceUrl: 'https://world.openfoodfacts.org/product/123',
+    })).toEqual({
+      name: 'Greek Yogurt — Example Dairy',
+      calories: 120,
+      protein: 20,
+      fiber: 1,
+    });
   });
 });
 

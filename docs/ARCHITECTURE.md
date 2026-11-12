@@ -60,7 +60,8 @@ the same small endpoint.
 
 The search prefers per-serving nutrition, calculates it from per-100g values
 when a serving quantity is available, and otherwise labels values per 100g.
-Manual entry remains the offline and service-failure fallback.
+Search results are converted into ordinary nutrition drafts and logged directly
+to today. Manual entry remains the offline and service-failure fallback.
 
 ## Deployment
 

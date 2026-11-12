@@ -172,8 +172,8 @@ A daily food log with one set of goals shared across days.
   the original entries.
 - Food search queries Open Food Facts only when Search is submitted. Results
   show their serving basis, calories, protein and any available fiber,
-  carbohydrate and fat values. Choosing one fills the manual-entry form so its
-  values can be checked or adjusted before logging.
+  carbohydrate and fat values. Each result has a plus button that logs it
+  directly to today; the manual-entry form remains separate.
 - Search validates and deduplicates returned products, credits the community
   data source, and explains failures without blocking manual entry. It never
   searches on every keystroke, so it respects the public service's rate limit.

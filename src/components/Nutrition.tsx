@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { searchFoods, type FoodSearchResult } from '../lib/food-search';
+import { foodSearchResultDraft, searchFoods, type FoodSearchResult } from '../lib/food-search';
 import {
   addFood,
   createFoodEntry,
@@ -161,8 +161,8 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
   const [searchResults, setSearchResults] = useState<FoodSearchResult[]>([]);
   const [searchStatus, setSearchStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [searchError, setSearchError] = useState('');
+  const [addedFood, setAddedFood] = useState('');
   const searchController = useRef<AbortController | null>(null);
-  const quickAdd = useRef<HTMLElement | null>(null);
   const [name, setName] = useState('');
   const [calories, setCalories] = useState<number | undefined>();
   const [protein, setProtein] = useState<number | undefined>();
@@ -186,6 +186,7 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
     searchController.current = controller;
     setSearchStatus('loading');
     setSearchError('');
+    setAddedFood('');
     try {
       const results = await searchFoods(query, controller.signal);
       setSearchResults(results);
@@ -200,12 +201,11 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
     }
   }
 
-  function useSearchResult(result: FoodSearchResult) {
-    setName(result.brand ? `${result.name} — ${result.brand}` : result.name);
-    setCalories(result.calories);
-    setProtein(result.protein);
-    setFiber(result.fiber);
-    quickAdd.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  function logSearchResult(result: FoodSearchResult) {
+    const entry = createFoodEntry(foodSearchResultDraft(result), newId());
+    if (!entry) return;
+    onChange(addFood(nutrition, today, entry));
+    setAddedFood(result.name);
   }
 
   function logFood() {
@@ -363,6 +363,7 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
           {searchStatus === 'success' && searchResults.length === 0 && (
             <p className="muted search-note">No foods found for “{searchedQuery}”. Try a brand or a more general name.</p>
           )}
+          {addedFood && <p className="status success">Added {addedFood} to today.</p>}
         </div>
 
         {searchResults.length > 0 && (
@@ -382,7 +383,14 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
                     {result.fiber !== undefined && <span>{formatNutritionAmount(result.fiber)} g fiber</span>}
                   </div>
                 </div>
-                <button type="button" className="use-food" onClick={() => useSearchResult(result)}>Use</button>
+                <button
+                  type="button"
+                  className="add-food-result"
+                  aria-label={`Add ${result.name} to today`}
+                  onClick={() => logSearchResult(result)}
+                >
+                  <span aria-hidden="true">+</span>
+                </button>
               </li>
             ))}
           </ul>
@@ -392,7 +400,7 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
         </p>
       </section>
 
-      <section ref={quickAdd} className="card quick-add">
+      <section className="card quick-add">
         <div>
           <p className="eyebrow">Manual entry</p>
           <h2 className="section-title">Quick add</h2>

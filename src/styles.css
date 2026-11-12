@@ -345,6 +345,11 @@ details .field {
   font-size: 0.875rem;
 }
 
+.status.success {
+  color: var(--accent);
+  font-size: 0.875rem;
+}
+
 /* --- routines, sessions, picker, history ---------------------------------- */
 
 h2.exercise-title {
@@ -1460,12 +1465,22 @@ button.day.selected {
   color: var(--text);
 }
 
-button.use-food {
-  min-height: 40px;
-  padding: 0 10px;
+button.add-food-result {
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface));
   color: var(--accent);
-  font-size: 0.8rem;
+  font-size: 1.5rem;
   font-weight: 700;
+  line-height: 1;
+}
+
+button.add-food-result:active {
+  transform: scale(0.94);
 }
 
 .food-data-note {
