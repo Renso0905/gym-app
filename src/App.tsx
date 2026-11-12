@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react';
 import { ExercisePicker } from './components/ExercisePicker';
 import { RoutineUpdatePrompt } from './components/RoutineUpdatePrompt';
 import { HistoryDetail, HistoryList } from './components/History';
+import { Home } from './components/Home';
+import { ExerciseProgressScreen, ProgressScreen } from './components/Progress';
 import { SessionScreen } from './components/SessionScreen';
 import { WorkoutEditor } from './components/WorkoutEditor';
 import { WorkoutList } from './components/WorkoutList';
@@ -23,16 +25,25 @@ import {
 import { useAppData } from './state/useAppData';
 
 type Screen =
-  | { name: 'home' }
+  | { name: 'root' }
   | { name: 'routine'; id: string }
   | { name: 'session' }
-  | { name: 'history-detail'; id: string };
+  | { name: 'history-detail'; id: string }
+  | { name: 'exercise-progress'; key: string };
+
+const TABS = [
+  { id: 'home', label: 'Home' },
+  { id: 'routines', label: 'Routines' },
+  { id: 'history', label: 'History' },
+  { id: 'progress', label: 'Progress' },
+] as const;
+type Tab = (typeof TABS)[number]['id'];
 
 export function App() {
   const data = useAppData();
   const { routines, setRoutines, history, setHistory, active, setActive, unit } = data;
-  const [tab, setTab] = useState<'routines' | 'history'>('routines');
-  const [screen, setScreen] = useState<Screen>({ name: 'home' });
+  const [tab, setTab] = useState<Tab>('home');
+  const [screen, setScreen] = useState<Screen>({ name: 'root' });
   const [picking, setPicking] = useState<null | { replace?: string }>(null);
   // Set after finishing a workout that differed from its routine, until the lifter answers.
   const [pendingUpdate, setPendingUpdate] = useState<null | { routineId: string; sessionId: string; changes: string[] }>(null);
@@ -88,10 +99,10 @@ export function App() {
         onChange={setActive}
         onAddExercises={() => setPicking({})}
         onReplaceExercise={(id) => setPicking({ replace: id })}
-        onBack={() => go({ name: 'home' })}
+        onBack={() => go({ name: 'root' })}
         onDiscard={() => {
           setActive(null);
-          go({ name: 'home' });
+          go({ name: 'root' });
         }}
         onFinish={() => {
           const finished = finishSession(active, Date.now());
@@ -123,11 +134,11 @@ export function App() {
         onDone={() => {
           // A routine left completely empty was a false start, not something to keep.
           if (isBlankWorkout(routine)) setRoutines((list) => removeWorkout(list, routine.id));
-          go({ name: 'home' });
+          go({ name: 'root' });
         }}
         onDelete={() => {
           setRoutines((list) => removeWorkout(list, routine.id));
-          go({ name: 'home' });
+          go({ name: 'root' });
         }}
       />
     );
@@ -141,10 +152,10 @@ export function App() {
       <HistoryDetail
         session={past}
         unit={unit}
-        onBack={() => go({ name: 'home' })}
+        onBack={() => go({ name: 'root' })}
         onDelete={() => {
           setHistory((list) => removeWorkout(list, past.id));
-          go({ name: 'home' });
+          go({ name: 'root' });
         }}
       />
       {prompt && promptRoutine && (
@@ -162,9 +173,17 @@ export function App() {
     );
   }
 
+  if (screen.name === 'exercise-progress') {
+    return <ExerciseProgressScreen history={history} exerciseKey={screen.key} unit={unit} onBack={() => go({ name: 'root' })} />;
+  }
+
   return (
     <>
-      {tab === 'routines' ? (
+      {tab === 'home' ? (
+        <Home data={{ routines, history, unit }} active={active} onResume={() => go({ name: 'session' })} />
+      ) : tab === 'progress' ? (
+        <ProgressScreen history={history} library={library} unit={unit} onOpenExercise={(key) => go({ name: 'exercise-progress', key })} />
+      ) : tab === 'routines' ? (
         <WorkoutList
           workouts={routines}
           active={active}
@@ -190,12 +209,19 @@ export function App() {
         <HistoryList history={history} unit={unit} onOpen={(id) => go({ name: 'history-detail', id })} />
       )}
       <nav className="tabs" aria-label="Sections">
-        <button type="button" aria-current={tab === 'routines' ? 'page' : undefined} onClick={() => setTab('routines')}>
-          Routines
-        </button>
-        <button type="button" aria-current={tab === 'history' ? 'page' : undefined} onClick={() => setTab('history')}>
-          History
-        </button>
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            aria-current={tab === t.id ? 'page' : undefined}
+            onClick={() => {
+              setTab(t.id);
+              window.scrollTo(0, 0);
+            }}
+          >
+            {t.label}
+          </button>
+        ))}
       </nav>
     </>
   );

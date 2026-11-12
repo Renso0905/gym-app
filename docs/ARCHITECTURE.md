@@ -62,4 +62,11 @@ GitHub environment, which requires approval from the repository owner.
 - Plain CSS in `src/styles.css`, no UI library. Controls are at least 44px tall
   and use 16px text so iOS does not zoom on focus.
 - Weights are unit-neutral numbers; lb or kg is only a label.
+- Progress statistics (`src/lib/progress.ts`) are recalculated from the history
+  each time; nothing derived is saved, so there is no second copy to go stale.
+  Dates use the device's local time and weeks start on Monday.
+- Charts are small hand-written SVG components (`src/components/Charts.tsx`),
+  one series each, so no chart library is needed.
+- Home renders the `HOME_WIDGETS` list in `src/components/Home.tsx`, which is
+  empty for now. A widget is an id, a title and a render function.
 - The web manifest exists, but there is no service worker until R5.
