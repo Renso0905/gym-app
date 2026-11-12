@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { foodSearchResultDraft, searchFoods, type FoodSearchResult } from '../lib/food-search';
 import {
   addFood,
   createFoodEntry,
@@ -156,6 +157,12 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
   const [selected, setSelected] = useState(today);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [searchedQuery, setSearchedQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<FoodSearchResult[]>([]);
+  const [searchStatus, setSearchStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [searchError, setSearchError] = useState('');
+  const [addedFood, setAddedFood] = useState('');
+  const searchController = useRef<AbortController | null>(null);
   const [name, setName] = useState('');
   const [calories, setCalories] = useState<number | undefined>();
   const [protein, setProtein] = useState<number | undefined>();
@@ -167,6 +174,39 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
   const foods = nutrition.days[selected] ?? [];
   const totals = nutritionTotals(foods);
   const calorieDifference = nutrition.goals.calories - totals.calories;
+
+  useEffect(() => () => searchController.current?.abort(), []);
+
+  async function submitSearch(event: FormEvent) {
+    event.preventDefault();
+    const query = search.trim();
+    if (query.length < 2) return;
+    searchController.current?.abort();
+    const controller = new AbortController();
+    searchController.current = controller;
+    setSearchStatus('loading');
+    setSearchError('');
+    setAddedFood('');
+    try {
+      const results = await searchFoods(query, controller.signal);
+      setSearchResults(results);
+      setSearchedQuery(query);
+      setSearchStatus('success');
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      setSearchResults([]);
+      setSearchedQuery(query);
+      setSearchError(error instanceof Error ? error.message : 'The food database is temporarily unavailable.');
+      setSearchStatus('error');
+    }
+  }
+
+  function logSearchResult(result: FoodSearchResult) {
+    const entry = createFoodEntry(foodSearchResultDraft(result), newId());
+    if (!entry) return;
+    onChange(addFood(nutrition, today, entry));
+    setAddedFood(result.name);
+  }
 
   function logFood() {
     const entry = createFoodEntry({ name, calories, protein, fiber }, newId());
@@ -302,17 +342,61 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
             <p className="eyebrow">Food database</p>
             <h2 className="section-title">Find a food</h2>
           </div>
-          <span className="coming-soon">Coming soon</span>
+          <span className="data-source-badge">Open Food Facts</span>
         </div>
-        <input
-          type="search"
-          aria-label="Search the future food database"
-          placeholder="Search foods, meals or brands"
-          value={search}
-          onChange={(event) => setSearch(event.currentTarget.value)}
-        />
-        <p className="muted search-note">
-          {search ? `“${search}” will be searchable when the food database is connected.` : 'Database search is ready to connect. Add food manually for now.'}
+        <form className="food-search-form" onSubmit={submitSearch}>
+          <input
+            type="search"
+            aria-label="Search the food database"
+            placeholder="Search foods, meals or brands"
+            value={search}
+            onChange={(event) => setSearch(event.currentTarget.value)}
+          />
+          <button type="submit" className="primary" disabled={search.trim().length < 2 || searchStatus === 'loading'}>
+            {searchStatus === 'loading' ? 'Searching…' : 'Search'}
+          </button>
+        </form>
+
+        <div className="food-search-status" aria-live="polite">
+          {searchStatus === 'idle' && <p className="muted search-note">Tap Search when you are ready. Manual entry always remains available.</p>}
+          {searchStatus === 'error' && <p className="status error">{searchError} You can still add the food manually below.</p>}
+          {searchStatus === 'success' && searchResults.length === 0 && (
+            <p className="muted search-note">No foods found for “{searchedQuery}”. Try a brand or a more general name.</p>
+          )}
+          {addedFood && <p className="status success">Added {addedFood} to today.</p>}
+        </div>
+
+        {searchResults.length > 0 && (
+          <ul className="food-search-results" aria-label={`Food results for ${searchedQuery}`}>
+            {searchResults.map((result) => (
+              <li key={result.id}>
+                {result.imageUrl ? <img src={result.imageUrl} alt="" loading="lazy" /> : <span className="food-image-placeholder" aria-hidden="true">◌</span>}
+                <div className="food-result-copy">
+                  <strong>{result.name}</strong>
+                  {result.brand && <span className="muted">{result.brand}</span>}
+                  <span className="food-result-basis">Per {result.basis}</span>
+                  <div className="food-result-nutrients">
+                    <span><strong>{formatNutritionAmount(result.calories)}</strong> kcal</span>
+                    {result.protein !== undefined && <span><strong>{formatNutritionAmount(result.protein)}</strong> g protein</span>}
+                    {result.carbohydrates !== undefined && <span>{formatNutritionAmount(result.carbohydrates)} g carbs</span>}
+                    {result.fat !== undefined && <span>{formatNutritionAmount(result.fat)} g fat</span>}
+                    {result.fiber !== undefined && <span>{formatNutritionAmount(result.fiber)} g fiber</span>}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className="add-food-result"
+                  aria-label={`Add ${result.name} to today`}
+                  onClick={() => logSearchResult(result)}
+                >
+                  <span aria-hidden="true">+</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        <p className="food-data-note">
+          Data from <a href="https://world.openfoodfacts.org" target="_blank" rel="noreferrer">Open Food Facts</a>. Values are community-contributed; check the package label when accuracy matters.
         </p>
       </section>
 

@@ -43,6 +43,26 @@ is sent to a server.
 `src/lib/storage.ts` owns the formats; loading repairs or skips damaged data.
 Change the key or bump the version when a format changes incompatibly.
 
+## External food data
+
+`src/lib/food-search.ts` owns the read-only Open Food Facts integration. Search
+is user-submitted rather than search-as-you-type because the public endpoint is
+rate-limited. The client requests only product identity, serving, image and
+nutrition fields; every response is treated as untrusted, validated and
+deduplicated before components receive it. No API key or account is stored.
+
+During local development, Vite exposes the same-origin `/api/food-search` route
+and makes an identified server-side request to Open Food Facts. It uses the
+global search host first and retries the US host once after a server failure.
+This avoids browser CORS and anonymous-bot blocking on phone previews.
+Production builds call the public endpoint directly until deployment supplies
+the same small endpoint.
+
+The search prefers per-serving nutrition, calculates it from per-100g values
+when a serving quantity is available, and otherwise labels values per 100g.
+Search results are converted into ordinary nutrition drafts and logged directly
+to today. Manual entry remains the offline and service-failure fallback.
+
 ## Deployment
 
 Not built yet. When added, the deploy job must target the `production`
