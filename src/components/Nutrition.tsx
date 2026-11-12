@@ -13,6 +13,7 @@ import {
 import { dateKey, parseDayKey, shiftMonth } from '../lib/sleep';
 import { newId } from '../lib/workouts';
 import { NumberField } from './NumberField';
+import { NutritionStatsScreen } from './HealthStats';
 
 interface Props {
   nutrition: NutritionData;
@@ -150,6 +151,7 @@ function PreviousDaysCalendar({
 
 export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
   const [now] = useState(() => Date.now());
+  const [showStats, setShowStats] = useState(false);
   const today = dateKey(now);
   const [selected, setSelected] = useState(today);
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -185,6 +187,8 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
     onChange(next);
   }
 
+  if (showStats) return <NutritionStatsScreen nutrition={nutrition} now={now} onBack={() => setShowStats(false)} />;
+
   return (
     <main className="screen with-tabs nutrition-screen">
       <header className="bar">
@@ -194,6 +198,14 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
         </div>
       </header>
       {saveFailed && <p className="status error">Could not save to this device. Your latest changes may be lost.</p>}
+
+      <button type="button" className="stats-button" onClick={() => setShowStats(true)}>
+        <span>
+          <strong>Nutrition stats</strong>
+          <small>30-day averages and progress</small>
+        </span>
+        <span aria-hidden="true">›</span>
+      </button>
 
       <div className="day-nav">
         <button type="button" className="icon" aria-label="Previous day" onClick={() => setSelected(shiftDayKey(selected, -1))}>

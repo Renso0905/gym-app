@@ -76,4 +76,7 @@ GitHub environment, which requires approval from the repository owner.
 - Nutrition entries use the same local calendar-day keys as sleep. Calorie,
   protein and fiber totals are derived from food entries rather than saved, so
   removing or repairing an entry cannot leave stale totals behind.
+- Sleep and nutrition statistics use rolling local-day windows and are derived
+  on demand from those logs. Missing days are omitted from averages and charts;
+  they are not interpreted as zero sleep or zero food.
 - The web manifest exists, but there is no service worker until R5.
