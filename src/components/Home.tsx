@@ -38,7 +38,7 @@ function WorkoutLauncher({ data, actions }: { data: HomeData; actions: HomeActio
     return (
       <div className="home-workout-empty">
         <p className="muted">Create a routine, then you can launch it right from Home.</p>
-        <button type="button" className="wide" onClick={actions.onOpenRoutines}>Go to Routines</button>
+        <button type="button" className="wide" onClick={actions.onOpenRoutines}>Go to Workouts</button>
       </div>
     );
   }

@@ -67,15 +67,16 @@ The outline of a workout, built and edited freely.
   volume.
 - A session can be opened to see every logged set, and deleted with a second tap.
 
-### R16 History lives in Progress
-- The tab bar has five tabs: Home, Routines, Progress, Nutrition and Sleep. History is not
-  a tab.
-- Progress shows a History section with the number of finished workouts and
+### R16 Workout progress navigation
+- The tab bar has four tabs: Home, Workouts, Nutrition and Sleep. Progress and
+  History are not tabs.
+- Workouts shows a Workout progress button that opens the progress view.
+- Progress has a back button to Workouts and shows a History section with the number of finished workouts and
   the date of the latest one. Opening it shows the History list (R4), which
   goes back to Progress.
 - A workout opened from the list goes back to the list. Finishing a workout
-  shows its detail with Progress as the selected tab, so going back leads
-  through History to Progress.
+  shows its detail with Workouts as the selected tab, so going back leads
+  through History and Progress to Workouts.
 
 ### R12 Keep the routine in step
 - When a finished session differs in structure from its routine, the app lists
@@ -94,16 +95,16 @@ The outline of a workout, built and edited freely.
   the screen. Choosing and arranging widgets is planned (R14).
 
 ### R19 Home workout launcher
-A workout card on Home starts a routine without visiting the Routines tab.
+A workout card on Home starts a routine without visiting the Workouts tab.
 - The card selects the first routine by default and shows its name, exercise
   count and up to four exercise names.
 - Swap workout opens the routine choices and changes the card without editing
   any routine. If the chosen routine is later removed, the first remaining one
   is selected.
 - Start workout begins the selected routine using the same session behavior as
-  the Routines tab. It is disabled while another workout is in progress; the
+  the Workouts tab. It is disabled while another workout is in progress; the
   existing resume banner remains available.
-- With no routines, the card explains what is needed and opens the Routines tab.
+- With no routines, the card explains what is needed and opens the Workouts tab.
 
 ### R10 Progress
 Statistics calculated from the finished sessions; nothing extra is stored.
@@ -134,7 +135,7 @@ Statistics calculated from the finished sessions; nothing extra is stored.
 - A record is dated to the workout that first reached it.
 - Sets without usable numbers count as sets but never in volume, records or
   charts.
-- With no finished workouts the tab explains what will appear.
+- With no finished workouts the progress view explains what will appear.
 
 ### R15 Sleep tracker
 One number per night: the hours slept, filed under the day you woke up.
@@ -155,7 +156,7 @@ One number per night: the hours slept, filed under the day you woke up.
 
 ### R17 Calorie and macro tracker
 A daily food log with one set of goals shared across days.
-- Nutrition is a tab between Progress and Sleep. It opens on today and can
+- Nutrition is a tab between Workouts and Sleep. It opens on today and can
   browse earlier days, but not future days.
 - A calorie goal is always set and defaults to 2,000 kcal. Protein and fiber
   goals are optional. Goals accept positive numbers and are saved immediately.

@@ -22,7 +22,7 @@ export function WorkoutEditor({ workout, unit, saveFailed, canStart, onChange, o
     <main className="screen">
       <header className="bar">
         <button type="button" className="link" onClick={onDone}>
-          ‹ Routines
+          ‹ Workouts
         </button>
         <span className={saveFailed ? 'status error' : 'status muted'} role="status">
           {saveFailed ? 'Not saved: storage is full or blocked' : 'Saved'}

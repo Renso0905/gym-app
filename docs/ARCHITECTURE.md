@@ -92,6 +92,8 @@ GitHub environment, which requires approval from the repository owner.
 - Home renders the `HOME_WIDGETS` list in `src/components/Home.tsx`. A widget is
   an id, a title and a render function given Home data and actions. The first
   widget is the workout launcher; its routine fallback rule is in `src/lib/home.ts`.
+- Root tab labels and order live in `src/lib/navigation.ts`. Workout progress
+  is a view opened from Workouts, not a separate root tab.
 - Sleep is keyed by local calendar day (`YYYY-MM-DD`), not by a timestamp, so
   an entry stays on its day when the time zone or clock changes.
 - Nutrition entries use the same local calendar-day keys as sleep. Calorie,

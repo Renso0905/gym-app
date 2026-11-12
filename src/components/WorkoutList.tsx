@@ -8,6 +8,7 @@ interface Props {
   active: Session | null;
   unit: WeightUnit;
   onUnitChange: (unit: WeightUnit) => void;
+  onOpenProgress: () => void;
   onCreate: () => void;
   onOpen: (id: string) => void;
   onDuplicate: (id: string) => void;
@@ -22,11 +23,11 @@ function outline(workout: Workout): string {
   return names.length > 4 ? `${names.slice(0, 4).join(', ')} +${names.length - 4} more` : names.join(', ');
 }
 
-export function WorkoutList({ workouts, active, unit, onUnitChange, onCreate, onOpen, onDuplicate, onDelete, onStart, onResume }: Props) {
+export function WorkoutList({ workouts, active, unit, onUnitChange, onOpenProgress, onCreate, onOpen, onDuplicate, onDelete, onStart, onResume }: Props) {
   return (
     <main className="screen with-tabs">
       <header className="bar">
-        <h1>Routines</h1>
+        <h1>Workouts</h1>
         <div className="segmented" role="group" aria-label="Weight unit">
           {(['lb', 'kg'] as const).map((u) => (
             <button key={u} type="button" aria-pressed={unit === u} onClick={() => onUnitChange(u)}>
@@ -35,6 +36,14 @@ export function WorkoutList({ workouts, active, unit, onUnitChange, onCreate, on
           ))}
         </div>
       </header>
+
+      <button type="button" className="stats-button" onClick={onOpenProgress}>
+        <span>
+          <strong>Workout progress</strong>
+          <small>History, statistics and personal records</small>
+        </span>
+        <span aria-hidden="true">›</span>
+      </button>
 
       {active && (
         <button type="button" className="banner" onClick={onResume}>
