@@ -67,6 +67,16 @@ The outline of a workout, built and edited freely.
   volume.
 - A session can be opened to see every logged set, and deleted with a second tap.
 
+### R16 History lives in Progress
+- The tab bar has four tabs: Home, Routines, Progress and Sleep. History is not
+  a tab.
+- Progress shows a History section with the number of finished workouts and
+  the date of the latest one. Opening it shows the History list (R4), which
+  goes back to Progress.
+- A workout opened from the list goes back to the list. Finishing a workout
+  shows its detail with Progress as the selected tab, so going back leads
+  through History to Progress.
+
 ### R12 Keep the routine in step
 - When a finished session differs in structure from its routine, the app lists
   the differences and asks whether to update the routine or keep it as it was.

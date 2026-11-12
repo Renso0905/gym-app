@@ -16,7 +16,7 @@ import {
   weeklyTotals,
   type PeriodId,
 } from '../lib/progress';
-import type { Session } from '../lib/sessions';
+import { sortHistory, type Session } from '../lib/sessions';
 import type { WeightUnit } from '../lib/storage';
 import { BarChart, LineChart } from './Charts';
 
@@ -37,10 +37,11 @@ interface Props {
   history: Session[];
   library: readonly ExerciseDef[];
   unit: WeightUnit;
+  onOpenHistory: () => void;
   onOpenExercise: (key: string) => void;
 }
 
-export function ProgressScreen({ history, library, unit, onOpenExercise }: Props) {
+export function ProgressScreen({ history, library, unit, onOpenHistory, onOpenExercise }: Props) {
   const [period, setPeriod] = useState<PeriodId>('4w');
   // One clock reading per visit, so every figure on the screen agrees.
   const [now] = useState(() => Date.now());
@@ -51,6 +52,7 @@ export function ProgressScreen({ history, library, unit, onOpenExercise }: Props
   const muscles = useMemo(() => setsByMuscle(sessionsInPeriod(history, period, now), library), [history, period, now, library]);
   const exercises = useMemo(() => exercisesLogged(history), [history]);
   const mostSets = Math.max(1, ...muscles.map((m) => m.sets));
+  const latest = useMemo(() => sortHistory(history)[0], [history]);
 
   if (history.length === 0) {
     return (
@@ -71,6 +73,17 @@ export function ProgressScreen({ history, library, unit, onOpenExercise }: Props
       <header className="bar">
         <h1>Progress</h1>
       </header>
+
+      {latest && (
+        <section className="card">
+          <button type="button" className="card-main card-link" onClick={onOpenHistory}>
+            <span className="card-title small">History</span>
+            <span className="muted">
+              {plural(history.length, 'workout')} · last {fullDate(latest.finishedAt ?? latest.startedAt)}
+            </span>
+          </button>
+        </section>
+      )}
 
       <div className="stats">
         <Stat label="Current streak" value={plural(streaks.current, 'week')} />
