@@ -68,7 +68,7 @@ The outline of a workout, built and edited freely.
 - A session can be opened to see every logged set, and deleted with a second tap.
 
 ### R16 History lives in Progress
-- The tab bar has four tabs: Home, Routines, Progress and Sleep. History is not
+- The tab bar has five tabs: Home, Routines, Progress, Nutrition and Sleep. History is not
   a tab.
 - Progress shows a History section with the number of finished workouts and
   the date of the latest one. Opening it shows the History list (R4), which
@@ -141,6 +141,41 @@ One number per night: the hours slept, filed under the day you woke up.
 - The month shows how many nights were tracked and their average.
 - Entries are saved to the device immediately and survive a reload. Damaged
   entries are skipped. If the device refuses the save, the screen says so.
+
+### R17 Calorie and macro tracker
+A daily food log with one set of goals shared across days.
+- Nutrition is a tab between Progress and Sleep. It opens on today and can
+  browse earlier days, but not future days.
+- A calorie goal is always set and defaults to 2,000 kcal. Protein and fiber
+  goals are optional. Goals accept positive numbers and are saved immediately.
+- A food has a name, calories and optional protein and fiber amounts. It can be
+  added manually to the selected day or removed from that day's log.
+- The day shows calorie progress and the amount remaining or over goal. Protein
+  and fiber totals are shown with progress when their goals are set.
+- A Previous days button opens a Monday-first month calendar. Days without food
+  are grey. Tracked days are red at 50% or less of the calorie goal, yellow
+  above 50% and below 80%, green from 80% up to 95%, turquoise from 95% through
+  110%, and red again when over 110%.
+- Selecting today or an earlier calendar day opens its food log. From an earlier
+  day, one food or the whole day can be copied into today's log without changing
+  the original entries.
+- A food search field is present and clearly marked as waiting for the future
+  food database connection; manual entry remains available.
+- Goals and food logs are saved to the device immediately and survive a reload.
+  Damaged days or entries are skipped. If the device refuses the save, the
+  screen says so.
+
+### R18 Sleep and nutrition statistics
+Dedicated 30-day summaries calculated from existing on-device logs.
+- A Sleep stats button appears above the sleep calendar. Its view shows nights
+  tracked, average and longest sleep, the share of tracked nights with at least
+  seven hours, and a line graph of nightly sleep in calendar order.
+- A Nutrition stats button appears above the nutrition day controls. Its view
+  shows days tracked, average calories, average protein and fiber, the share of
+  tracked days from 95% through 110% of the calorie goal, and a line graph of
+  daily calories with the current goal drawn as a reference line.
+- Both views cover today and the previous 29 days. Missing days are omitted
+  rather than treated as zero, and an empty view explains how to begin.
 
 ## Planned
 

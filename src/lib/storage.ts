@@ -1,6 +1,15 @@
 // Saving and loading on the device. Loading is tolerant: damaged data is
 // repaired or skipped, never thrown, so a bad save cannot lock the user out.
 import { EQUIPMENT, MUSCLES, type Equipment, type ExerciseDef, type Muscle } from './exercises';
+import {
+  cleanGoalAmount,
+  cleanNutritionAmount,
+  DEFAULT_CALORIE_GOAL,
+  emptyNutrition,
+  type FoodEntry,
+  type NutritionData,
+  type NutritionGoals,
+} from './nutrition';
 import type { Session } from './sessions';
 import { cleanHours, parseDayKey, type SleepLog } from './sleep';
 import { cleanNumber, EXERCISE_KINDS, newId } from './workouts';
@@ -12,6 +21,7 @@ export const SESSIONS_KEY = 'gym.sessions.v1';
 export const ACTIVE_KEY = 'gym.active.v1';
 export const CUSTOM_EXERCISES_KEY = 'gym.exercises.v1';
 export const SLEEP_KEY = 'gym.sleep.v1';
+export const NUTRITION_KEY = 'gym.nutrition.v1';
 
 export type WeightUnit = 'lb' | 'kg';
 
@@ -231,4 +241,50 @@ export function loadSleep(store: KeyValueStore): SleepLog {
 
 export function saveSleep(store: KeyValueStore, nights: SleepLog): boolean {
   return writeJson(store, SLEEP_KEY, { version: 1, nights });
+}
+
+// --- nutrition (R17) -------------------------------------------------------
+
+function parseFoodEntry(raw: unknown): FoodEntry | null {
+  if (!isRecord(raw) || typeof raw.id !== 'string' || raw.id === '') return null;
+  const name = text(raw.name).trim();
+  const calories = cleanNutritionAmount(raw.calories);
+  if (name === '' || calories === undefined) return null;
+  const entry: FoodEntry = { id: raw.id, name, calories };
+  const protein = cleanNutritionAmount(raw.protein);
+  const fiber = cleanNutritionAmount(raw.fiber);
+  if (protein !== undefined) entry.protein = protein;
+  if (fiber !== undefined) entry.fiber = fiber;
+  return entry;
+}
+
+/** Daily goals and food entries. Damaged days and entries are skipped. */
+export function loadNutrition(store: KeyValueStore): NutritionData {
+  const data = readJson(store, NUTRITION_KEY);
+  if (!isRecord(data)) return emptyNutrition();
+
+  const rawGoals = isRecord(data.goals) ? data.goals : {};
+  const goals: NutritionGoals = { calories: cleanGoalAmount(rawGoals.calories) ?? DEFAULT_CALORIE_GOAL };
+  const protein = cleanGoalAmount(rawGoals.protein);
+  const fiber = cleanGoalAmount(rawGoals.fiber);
+  if (protein !== undefined) goals.protein = protein;
+  if (fiber !== undefined) goals.fiber = fiber;
+
+  const days: Record<string, FoodEntry[]> = {};
+  if (isRecord(data.days)) {
+    for (const [key, rawEntries] of Object.entries(data.days)) {
+      if (!parseDayKey(key) || !Array.isArray(rawEntries)) continue;
+      const seen = new Set<string>();
+      const entries = rawEntries
+        .map(parseFoodEntry)
+        .filter((entry) => entry !== null)
+        .filter((entry) => (seen.has(entry.id) ? false : (seen.add(entry.id), true)));
+      if (entries.length > 0) days[key] = entries;
+    }
+  }
+  return { goals, days };
+}
+
+export function saveNutrition(store: KeyValueStore, data: NutritionData): boolean {
+  return writeJson(store, NUTRITION_KEY, { version: 1, ...data });
 }
