@@ -1466,6 +1466,8 @@ button.day.selected {
 }
 
 button.add-food-result {
+  display: grid;
+  place-items: center;
   width: 44px;
   height: 44px;
   min-height: 44px;
@@ -1477,6 +1479,10 @@ button.add-food-result {
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1;
+}
+
+button.add-food-result > span {
+  transform: translateY(-1px);
 }
 
 button.add-food-result:active {
