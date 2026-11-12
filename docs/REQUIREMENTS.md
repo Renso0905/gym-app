@@ -170,8 +170,13 @@ A daily food log with one set of goals shared across days.
 - Selecting today or an earlier calendar day opens its food log. From an earlier
   day, one food or the whole day can be copied into today's log without changing
   the original entries.
-- A food search field is present and clearly marked as waiting for the future
-  food database connection; manual entry remains available.
+- Food search queries Open Food Facts only when Search is submitted. Results
+  show their serving basis, calories, protein and any available fiber,
+  carbohydrate and fat values. Choosing one fills the manual-entry form so its
+  values can be checked or adjusted before logging.
+- Search validates and deduplicates returned products, credits the community
+  data source, and explains failures without blocking manual entry. It never
+  searches on every keystroke, so it respects the public service's rate limit.
 - Goals and food logs are saved to the device immediately and survive a reload.
   Damaged days or entries are skipped. If the device refuses the save, the
   screen says so.

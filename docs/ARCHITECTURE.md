@@ -43,6 +43,18 @@ is sent to a server.
 `src/lib/storage.ts` owns the formats; loading repairs or skips damaged data.
 Change the key or bump the version when a format changes incompatibly.
 
+## External food data
+
+`src/lib/food-search.ts` owns the read-only Open Food Facts integration. Search
+is user-submitted rather than search-as-you-type because the public endpoint is
+rate-limited. The client requests only product identity, serving, image and
+nutrition fields; every response is treated as untrusted, validated and
+deduplicated before components receive it. No API key or account is stored.
+
+The search prefers per-serving nutrition, calculates it from per-100g values
+when a serving quantity is available, and otherwise labels values per 100g.
+Manual entry remains the offline and service-failure fallback.
+
 ## Deployment
 
 Not built yet. When added, the deploy job must target the `production`
