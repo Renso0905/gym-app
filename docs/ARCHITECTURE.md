@@ -37,6 +37,7 @@ is sent to a server.
 | `gym.active.v1` | The session in progress, or null |
 | `gym.exercises.v1` | Custom exercises |
 | `gym.unit.v1` | `lb` or `kg` |
+| `gym.sleep.v1` | Hours slept, as `{ version, nights }` with one `YYYY-MM-DD: hours` entry per night |
 
 `src/lib/storage.ts` owns the formats; loading repairs or skips damaged data.
 Change the key or bump the version when a format changes incompatibly.
@@ -69,4 +70,6 @@ GitHub environment, which requires approval from the repository owner.
   one series each, so no chart library is needed.
 - Home renders the `HOME_WIDGETS` list in `src/components/Home.tsx`, which is
   empty for now. A widget is an id, a title and a render function.
+- Sleep is keyed by local calendar day (`YYYY-MM-DD`), not by a timestamp, so
+  an entry stays on its day when the time zone or clock changes.
 - The web manifest exists, but there is no service worker until R5.

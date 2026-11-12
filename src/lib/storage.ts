@@ -2,6 +2,7 @@
 // repaired or skipped, never thrown, so a bad save cannot lock the user out.
 import { EQUIPMENT, MUSCLES, type Equipment, type ExerciseDef, type Muscle } from './exercises';
 import type { Session } from './sessions';
+import { cleanHours, parseDayKey, type SleepLog } from './sleep';
 import { cleanNumber, EXERCISE_KINDS, newId } from './workouts';
 import type { Exercise, ExerciseKind, PlannedSet, Workout } from './workouts';
 
@@ -10,6 +11,7 @@ export const UNIT_KEY = 'gym.unit.v1';
 export const SESSIONS_KEY = 'gym.sessions.v1';
 export const ACTIVE_KEY = 'gym.active.v1';
 export const CUSTOM_EXERCISES_KEY = 'gym.exercises.v1';
+export const SLEEP_KEY = 'gym.sleep.v1';
 
 export type WeightUnit = 'lb' | 'kg';
 
@@ -211,4 +213,22 @@ export function loadCustomExercises(store: KeyValueStore): ExerciseDef[] {
 
 export function saveCustomExercises(store: KeyValueStore, exercises: ExerciseDef[]): boolean {
   return writeJson(store, CUSTOM_EXERCISES_KEY, { version: 1, exercises });
+}
+
+// --- sleep (R15) -----------------------------------------------------------
+
+/** Hours slept by day. Entries with an impossible date or unusable hours are skipped. */
+export function loadSleep(store: KeyValueStore): SleepLog {
+  const data = readJson(store, SLEEP_KEY);
+  const nights = isRecord(data) && isRecord(data.nights) ? data.nights : {};
+  const log: Record<string, number> = {};
+  for (const [key, value] of Object.entries(nights)) {
+    const hours = cleanHours(value);
+    if (parseDayKey(key) && hours !== undefined) log[key] = hours;
+  }
+  return log;
+}
+
+export function saveSleep(store: KeyValueStore, nights: SleepLog): boolean {
+  return writeJson(store, SLEEP_KEY, { version: 1, nights });
 }

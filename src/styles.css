@@ -806,3 +806,152 @@ h2.section-title:not(.card *) {
   stroke: var(--surface);
   stroke-width: 2;
 }
+
+/* --- sleep ---------------------------------------------------------------- */
+
+:root {
+  --sleep-short: #ff6b6b;
+  --sleep-fair: #f2c94c;
+  --sleep-good: #3cb55a;
+  --sleep-long: #40e0d0;
+  --sleep-none: #4a5368;
+}
+
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.calendar-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  justify-items: center;
+}
+
+.calendar-head {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+button.day {
+  width: 44px;
+  height: 44px;
+  min-height: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--sleep-none);
+  color: var(--text);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.day-number {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.day-hours {
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+/* Dark text on the bright fills; the fill is the colour, the text stays ink. */
+button.day[class*='band-'] {
+  color: #0f1420;
+}
+
+button.day.band-short,
+.swatch.band-short {
+  background: var(--sleep-short);
+}
+
+button.day.band-fair,
+.swatch.band-fair {
+  background: var(--sleep-fair);
+}
+
+button.day.band-good,
+.swatch.band-good {
+  background: var(--sleep-good);
+}
+
+button.day.band-long,
+.swatch.band-long {
+  background: var(--sleep-long);
+}
+
+/* Today not yet tracked, and days still to come, are outlines rather than grey fills. */
+button.day.today.untracked {
+  background: none;
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+button.day.future {
+  background: none;
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+/* Today keeps an accent ring once it is tracked and takes a colour. */
+button.day.today[class*='band-'] {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+}
+
+button.day.selected {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+.sleep-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sleep-entry input {
+  flex: 1;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.legend {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.swatch.untracked {
+  background: var(--sleep-none);
+}
