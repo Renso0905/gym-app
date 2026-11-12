@@ -16,6 +16,7 @@ import {
   type SleepLog,
 } from '../lib/sleep';
 import { NumberField } from './NumberField';
+import { SleepStatsScreen } from './HealthStats';
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
@@ -40,6 +41,7 @@ interface Props {
 export function SleepScreen({ sleep, saveFailed, onChange }: Props) {
   // One clock reading per visit, so "today" cannot change under the screen.
   const [now] = useState(() => Date.now());
+  const [showStats, setShowStats] = useState(false);
   const today = dateKey(now);
   const current = parseDayKey(today)!;
   const [view, setView] = useState({ year: current.year, month: current.month });
@@ -52,12 +54,22 @@ export function SleepScreen({ sleep, saveFailed, onChange }: Props) {
   const hours: number | undefined = sleep[selected];
   const record = (value: number | undefined) => onChange(setSleep(sleep, selected, value));
 
+  if (showStats) return <SleepStatsScreen sleep={sleep} now={now} onBack={() => setShowStats(false)} />;
+
   return (
     <main className="screen with-tabs">
       <header className="bar">
         <h1>Sleep</h1>
       </header>
       {saveFailed && <p className="status error">Could not save to this device. Your latest changes may be lost.</p>}
+
+      <button type="button" className="stats-button" onClick={() => setShowStats(true)}>
+        <span>
+          <strong>Sleep stats</strong>
+          <small>30-day trends and progress</small>
+        </span>
+        <span aria-hidden="true">›</span>
+      </button>
 
       <div className="month-nav">
         <button type="button" className="icon" aria-label="Previous month" onClick={() => setView(shiftMonth(view.year, view.month, -1))}>

@@ -1,6 +1,6 @@
 // R17: daily calorie and macro tracking. Nutrition is stored by local
 // calendar day so an entry does not move when the clock or time zone changes.
-import { dayKey, monthCalendar, parseDayKey } from './sleep';
+import { dayKey, monthCalendar, parseDayKey, recentDayKeys } from './sleep';
 
 export interface NutritionGoals {
   calories: number;
@@ -163,4 +163,50 @@ export function shiftDayKey(key: string, direction: -1 | 1): string {
 
 export function formatNutritionAmount(value: number): string {
   return String(Math.round(value * 100) / 100);
+}
+
+export interface NutritionProgressPoint extends NutritionTotals {
+  key: string;
+}
+
+/** Tracked nutrition days in the requested recent window, oldest first. */
+export function nutritionProgress(data: NutritionData, now: number, days = 30): NutritionProgressPoint[] {
+  return recentDayKeys(now, days)
+    .filter((key) => (data.days[key]?.length ?? 0) > 0)
+    .map((key) => ({ key, ...nutritionTotals(data.days[key] ?? []) }));
+}
+
+export interface NutritionStatistics {
+  tracked: number;
+  averageCalories?: number;
+  averageProtein?: number;
+  averageFiber?: number;
+  onTarget: number;
+  onTargetPercent?: number;
+}
+
+/** Summary of tracked nutrition days. On target means 95% through 110% of the calorie goal. */
+export function nutritionStatistics(data: NutritionData, now: number, days = 30): NutritionStatistics {
+  const points = nutritionProgress(data, now, days);
+  if (points.length === 0) return { tracked: 0, onTarget: 0 };
+  const onTarget = points.filter((point) => {
+    const ratio = point.calories / data.goals.calories;
+    return ratio >= 0.95 && ratio <= 1.1;
+  }).length;
+  const total = points.reduce(
+    (sum, point) => ({
+      calories: sum.calories + point.calories,
+      protein: sum.protein + point.protein,
+      fiber: sum.fiber + point.fiber,
+    }),
+    { calories: 0, protein: 0, fiber: 0 },
+  );
+  return {
+    tracked: points.length,
+    averageCalories: total.calories / points.length,
+    averageProtein: total.protein / points.length,
+    averageFiber: total.fiber / points.length,
+    onTarget,
+    onTargetPercent: (onTarget / points.length) * 100,
+  };
 }

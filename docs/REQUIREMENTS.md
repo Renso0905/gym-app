@@ -165,6 +165,18 @@ A daily food log with one set of goals shared across days.
   Damaged days or entries are skipped. If the device refuses the save, the
   screen says so.
 
+### R18 Sleep and nutrition statistics
+Dedicated 30-day summaries calculated from existing on-device logs.
+- A Sleep stats button appears above the sleep calendar. Its view shows nights
+  tracked, average and longest sleep, the share of tracked nights with at least
+  seven hours, and a line graph of nightly sleep in calendar order.
+- A Nutrition stats button appears above the nutrition day controls. Its view
+  shows days tracked, average calories, average protein and fiber, the share of
+  tracked days from 95% through 110% of the calorie goal, and a line graph of
+  daily calories with the current goal drawn as a reference line.
+- Both views cover today and the previous 29 days. Missing days are omitted
+  rather than treated as zero, and an empty view explains how to begin.
+
 ## Planned
 
 - R5 Offline use: the app loads without a network (service worker).

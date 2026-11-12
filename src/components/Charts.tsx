@@ -49,6 +49,8 @@ interface ChartProps {
   title: string;
   /** Writes an axis value, e.g. the maximum. */
   format: (value: number) => string;
+  /** Optional benchmark drawn across a line chart. */
+  reference?: { value: number; label: string };
 }
 
 /** A bar that is square on the baseline and rounded at the top. */
@@ -110,19 +112,24 @@ export function BarChart({ items, title, format }: ChartProps) {
 }
 
 /** One value per session over time. The scale fits the values rather than starting at zero. */
-export function LineChart({ items, title, format }: ChartProps) {
+export function LineChart({ items, title, format, reference }: ChartProps) {
   const [ref, width] = useWidth();
   const [picked, setPicked] = useState<number | null>(null);
   const selected = picked !== null && picked < items.length ? picked : items.length - 1;
   const values = items.map((item) => item.value);
-  const max = Math.max(...values);
-  const min = Math.min(...values);
+  const max = Math.max(...values, reference?.value ?? -Infinity);
+  const min = Math.min(...values, reference?.value ?? Infinity);
   const inset = 8;
   const xs = items.map((_, i) => (items.length === 1 ? width / 2 : inset + (i / (items.length - 1)) * (width - 2 * inset)));
   const plotTop = TOP + 8;
   // Room under the line for the minimum's label.
   const plotBottom = BASELINE - 22;
   const ys = values.map((value) => (max === min ? (plotTop + plotBottom) / 2 : plotBottom - ((value - min) / (max - min)) * (plotBottom - plotTop)));
+  const referenceY = reference
+    ? max === min
+      ? (plotTop + plotBottom) / 2
+      : plotBottom - ((reference.value - min) / (max - min)) * (plotBottom - plotTop)
+    : undefined;
 
   if (items.length === 0) return null;
   return (
@@ -142,6 +149,14 @@ export function LineChart({ items, title, format }: ChartProps) {
             </text>
           )}
           <line className="chart-axis" x1={0} x2={width} y1={BASELINE} y2={BASELINE} />
+          {reference && referenceY !== undefined && (
+            <>
+              <line className="chart-reference" x1={0} x2={width} y1={referenceY} y2={referenceY} />
+              <text className="chart-reference-text" x={width} y={referenceY - 5} textAnchor="end">
+                {reference.label} {format(reference.value)}
+              </text>
+            </>
+          )}
           <line className="chart-cursor" x1={xs[selected]} x2={xs[selected]} y1={TOP} y2={BASELINE} />
           <polyline className="chart-line" points={xs.map((x, i) => `${x},${ys[i]}`).join(' ')} />
           {(items.length <= 24 ? items : []).map((_, i) => (

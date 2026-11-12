@@ -8,6 +8,8 @@ import {
   formatNutritionAmount,
   nutritionDayBand,
   nutritionMonthCalendar,
+  nutritionProgress,
+  nutritionStatistics,
   nutritionTotals,
   removeFood,
   setNutritionGoals,
@@ -163,5 +165,44 @@ describe('nutrition storage', () => {
     };
     expect(loadNutrition(blocked)).toEqual(emptyNutrition());
     expect(saveNutrition(blocked, emptyNutrition())).toBe(false);
+  });
+});
+
+describe('nutrition statistics', () => {
+  const now = new Date(2026, 10, 12, 9).getTime();
+  const data = {
+    goals: { calories: 2000, protein: 160, fiber: 30 },
+    days: {
+      '2026-11-09': [{ id: 'a', name: 'Day A', calories: 1800, protein: 100, fiber: 20 }],
+      '2026-11-10': [{ id: 'b', name: 'Day B', calories: 2000, protein: 160, fiber: 30 }],
+      '2026-11-11': [
+        { id: 'c', name: 'Lunch', calories: 1000, protein: 50 },
+        { id: 'd', name: 'Dinner', calories: 1200, protein: 70, fiber: 20 },
+      ],
+      '2026-10-01': [{ id: 'old', name: 'Old', calories: 5000 }],
+    },
+  };
+
+  it('orders recent tracked days and derives each day total', () => {
+    expect(nutritionProgress(data, now, 7)).toEqual([
+      { key: '2026-11-09', calories: 1800, protein: 100, fiber: 20 },
+      { key: '2026-11-10', calories: 2000, protein: 160, fiber: 30 },
+      { key: '2026-11-11', calories: 2200, protein: 120, fiber: 20 },
+    ]);
+  });
+
+  it('summarises averages and calorie-goal adherence', () => {
+    expect(nutritionStatistics(data, now, 30)).toEqual({
+      tracked: 3,
+      averageCalories: 2000,
+      averageProtein: 380 / 3,
+      averageFiber: 70 / 3,
+      onTarget: 2,
+      onTargetPercent: (2 / 3) * 100,
+    });
+  });
+
+  it('returns an empty summary when no food was tracked', () => {
+    expect(nutritionStatistics(emptyNutrition(), now)).toEqual({ tracked: 0, onTarget: 0 });
   });
 });

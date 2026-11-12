@@ -11,6 +11,9 @@ import {
   shiftMonth,
   sleepBand,
   stepHours,
+  recentDayKeys,
+  sleepProgress,
+  sleepStatistics,
 } from './sleep';
 import { loadSleep, saveSleep, SLEEP_KEY, type KeyValueStore } from './storage';
 
@@ -167,6 +170,42 @@ describe('month summary', () => {
 
   it('has no average with nothing tracked', () => {
     expect(monthSummary({}, 2026, 10)).toEqual({ tracked: 0 });
+  });
+});
+
+describe('sleep statistics', () => {
+  it('builds a recent local-day range across month boundaries', () => {
+    expect(recentDayKeys(new Date(2026, 10, 2, 9).getTime(), 4)).toEqual([
+      '2026-10-30',
+      '2026-10-31',
+      '2026-11-01',
+      '2026-11-02',
+    ]);
+    expect(recentDayKeys(NOW, 0)).toEqual([]);
+  });
+
+  it('orders tracked nights and skips missing days instead of treating them as zero', () => {
+    const log = { '2026-11-08': 6.5, '2026-11-10': 8, '2026-10-01': 9 };
+    expect(sleepProgress(log, NOW, 5)).toEqual([
+      { key: '2026-11-08', hours: 6.5 },
+      { key: '2026-11-10', hours: 8 },
+    ]);
+  });
+
+  it('summarises average, range and nights with at least seven hours', () => {
+    const log = { '2026-11-08': 6, '2026-11-09': 7, '2026-11-10': 8, '2026-11-11': 9 };
+    expect(sleepStatistics(log, NOW, 30)).toEqual({
+      tracked: 4,
+      average: 7.5,
+      longest: 9,
+      shortest: 6,
+      sevenPlus: 3,
+      sevenPlusPercent: 75,
+    });
+  });
+
+  it('returns an empty summary when no night was tracked', () => {
+    expect(sleepStatistics({}, NOW)).toEqual({ tracked: 0, sevenPlus: 0 });
   });
 });
 
