@@ -25,15 +25,20 @@ interface ListProps {
   history: Session[];
   unit: WeightUnit;
   onOpen: (id: string) => void;
+  onBack: () => void;
 }
 
-export function HistoryList({ history, unit, onOpen }: ListProps) {
+// R4/R16: the full list of finished workouts, opened from the Progress tab.
+export function HistoryList({ history, unit, onOpen, onBack }: ListProps) {
   const sessions = sortHistory(history);
   return (
-    <main className="screen with-tabs">
+    <main className="screen">
       <header className="bar">
-        <h1>History</h1>
+        <button type="button" className="link" onClick={onBack}>
+          ‹ Progress
+        </button>
       </header>
+      <h1>History</h1>
       {sessions.length === 0 ? (
         <p className="empty">Finished workouts appear here, newest first.</p>
       ) : (

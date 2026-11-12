@@ -221,6 +221,21 @@ textarea::placeholder {
   text-align: left;
 }
 
+.card-main.card-link {
+  position: relative;
+  padding-right: 28px;
+}
+
+.card-main.card-link::after {
+  content: '›';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: var(--muted);
+}
+
 .card-title {
   font-size: 1.15rem;
   font-weight: 600;

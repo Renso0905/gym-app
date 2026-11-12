@@ -29,13 +29,13 @@ type Screen =
   | { name: 'root' }
   | { name: 'routine'; id: string }
   | { name: 'session' }
+  | { name: 'history' }
   | { name: 'history-detail'; id: string }
   | { name: 'exercise-progress'; key: string };
 
 const TABS = [
   { id: 'home', label: 'Home' },
   { id: 'routines', label: 'Routines' },
-  { id: 'history', label: 'History' },
   { id: 'progress', label: 'Progress' },
   { id: 'sleep', label: 'Sleep' },
 ] as const;
@@ -114,7 +114,7 @@ export function App() {
           const changes = from ? routineChanges(from, finished) : [];
           setPendingUpdate(from && changes.length > 0 ? { routineId: from.id, sessionId: finished.id, changes } : null);
           setActive(null);
-          setTab('history');
+          setTab('progress');
           go({ name: 'history-detail', id: finished.id });
         }}
       />
@@ -154,10 +154,10 @@ export function App() {
       <HistoryDetail
         session={past}
         unit={unit}
-        onBack={() => go({ name: 'root' })}
+        onBack={() => go({ name: 'history' })}
         onDelete={() => {
           setHistory((list) => removeWorkout(list, past.id));
-          go({ name: 'root' });
+          go({ name: 'history' });
         }}
       />
       {prompt && promptRoutine && (
@@ -175,6 +175,10 @@ export function App() {
     );
   }
 
+  if (screen.name === 'history') {
+    return <HistoryList history={history} unit={unit} onOpen={(id) => go({ name: 'history-detail', id })} onBack={() => go({ name: 'root' })} />;
+  }
+
   if (screen.name === 'exercise-progress') {
     return <ExerciseProgressScreen history={history} exerciseKey={screen.key} unit={unit} onBack={() => go({ name: 'root' })} />;
   }
@@ -184,10 +188,16 @@ export function App() {
       {tab === 'home' ? (
         <Home data={{ routines, history, unit }} active={active} onResume={() => go({ name: 'session' })} />
       ) : tab === 'progress' ? (
-        <ProgressScreen history={history} library={library} unit={unit} onOpenExercise={(key) => go({ name: 'exercise-progress', key })} />
+        <ProgressScreen
+          history={history}
+          library={library}
+          unit={unit}
+          onOpenHistory={() => go({ name: 'history' })}
+          onOpenExercise={(key) => go({ name: 'exercise-progress', key })}
+        />
       ) : tab === 'sleep' ? (
         <SleepScreen sleep={data.sleep} saveFailed={data.saveFailed} onChange={data.setSleep} />
-      ) : tab === 'routines' ? (
+      ) : (
         <WorkoutList
           workouts={routines}
           active={active}
@@ -209,8 +219,6 @@ export function App() {
           onStart={start}
           onResume={() => go({ name: 'session' })}
         />
-      ) : (
-        <HistoryList history={history} unit={unit} onOpen={(id) => go({ name: 'history-detail', id })} />
       )}
       <nav className="tabs" aria-label="Sections">
         {TABS.map((t) => (
