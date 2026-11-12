@@ -10,6 +10,7 @@ import { SleepScreen } from './components/Sleep';
 import { WorkoutEditor } from './components/WorkoutEditor';
 import { WorkoutList } from './components/WorkoutList';
 import { allExercises, type ExerciseDef } from './lib/exercises';
+import { ROOT_TABS, type RootTab } from './lib/navigation';
 import { applySessionToRoutine, finishSession, routineChanges, startSession } from './lib/sessions';
 import {
   addExercises,
@@ -32,21 +33,13 @@ type Screen =
   | { name: 'session' }
   | { name: 'history' }
   | { name: 'history-detail'; id: string }
+  | { name: 'progress' }
   | { name: 'exercise-progress'; key: string };
-
-const TABS = [
-  { id: 'home', label: 'Home' },
-  { id: 'routines', label: 'Routines' },
-  { id: 'progress', label: 'Progress' },
-  { id: 'nutrition', label: 'Nutrition' },
-  { id: 'sleep', label: 'Sleep' },
-] as const;
-type Tab = (typeof TABS)[number]['id'];
 
 export function App() {
   const data = useAppData();
   const { routines, setRoutines, history, setHistory, active, setActive, unit } = data;
-  const [tab, setTab] = useState<Tab>('home');
+  const [tab, setTab] = useState<RootTab>('home');
   const [homeWorkoutId, setHomeWorkoutId] = useState('');
   const [screen, setScreen] = useState<Screen>({ name: 'root' });
   const [picking, setPicking] = useState<null | { replace?: string }>(null);
@@ -117,7 +110,7 @@ export function App() {
           const changes = from ? routineChanges(from, finished) : [];
           setPendingUpdate(from && changes.length > 0 ? { routineId: from.id, sessionId: finished.id, changes } : null);
           setActive(null);
-          setTab('progress');
+          setTab('routines');
           go({ name: 'history-detail', id: finished.id });
         }}
       />
@@ -179,16 +172,25 @@ export function App() {
   }
 
   if (screen.name === 'history') {
-    return <HistoryList history={history} unit={unit} onOpen={(id) => go({ name: 'history-detail', id })} onBack={() => go({ name: 'root' })} />;
+    return <HistoryList history={history} unit={unit} onOpen={(id) => go({ name: 'history-detail', id })} onBack={() => go({ name: 'progress' })} />;
   }
 
   if (screen.name === 'exercise-progress') {
-    return <ExerciseProgressScreen history={history} exerciseKey={screen.key} unit={unit} onBack={() => go({ name: 'root' })} />;
+    return <ExerciseProgressScreen history={history} exerciseKey={screen.key} unit={unit} onBack={() => go({ name: 'progress' })} />;
   }
 
   return (
     <>
-      {tab === 'home' ? (
+      {screen.name === 'progress' ? (
+        <ProgressScreen
+          history={history}
+          library={library}
+          unit={unit}
+          onBack={() => go({ name: 'root' })}
+          onOpenHistory={() => go({ name: 'history' })}
+          onOpenExercise={(key) => go({ name: 'exercise-progress', key })}
+        />
+      ) : tab === 'home' ? (
         <Home
           data={{ routines, history, unit }}
           active={active}
@@ -201,14 +203,6 @@ export function App() {
             window.scrollTo(0, 0);
           }}
         />
-      ) : tab === 'progress' ? (
-        <ProgressScreen
-          history={history}
-          library={library}
-          unit={unit}
-          onOpenHistory={() => go({ name: 'history' })}
-          onOpenExercise={(key) => go({ name: 'exercise-progress', key })}
-        />
       ) : tab === 'sleep' ? (
         <SleepScreen sleep={data.sleep} saveFailed={data.saveFailed} onChange={data.setSleep} />
       ) : tab === 'nutrition' ? (
@@ -219,6 +213,7 @@ export function App() {
           active={active}
           unit={unit}
           onUnitChange={data.setUnit}
+          onOpenProgress={() => go({ name: 'progress' })}
           onCreate={() => {
             const created = createWorkout(Date.now());
             setRoutines((list) => upsertWorkout(list, created));
@@ -237,14 +232,14 @@ export function App() {
         />
       )}
       <nav className="tabs" aria-label="Sections">
-        {TABS.map((t) => (
+        {ROOT_TABS.map((t) => (
           <button
             key={t.id}
             type="button"
             aria-current={tab === t.id ? 'page' : undefined}
             onClick={() => {
               setTab(t.id);
-              window.scrollTo(0, 0);
+              go({ name: 'root' });
             }}
           >
             {t.label}

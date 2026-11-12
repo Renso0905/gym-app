@@ -1,4 +1,4 @@
-// R10: the Progress tab and the page for one exercise. All figures come from
+// R10: the Progress view and the page for one exercise. All figures come from
 // src/lib/progress.ts; this file only lays them out.
 import { useMemo, useState } from 'react';
 import type { ExerciseDef } from '../lib/exercises';
@@ -37,11 +37,12 @@ interface Props {
   history: Session[];
   library: readonly ExerciseDef[];
   unit: WeightUnit;
+  onBack: () => void;
   onOpenHistory: () => void;
   onOpenExercise: (key: string) => void;
 }
 
-export function ProgressScreen({ history, library, unit, onOpenHistory, onOpenExercise }: Props) {
+export function ProgressScreen({ history, library, unit, onBack, onOpenHistory, onOpenExercise }: Props) {
   const [period, setPeriod] = useState<PeriodId>('4w');
   // One clock reading per visit, so every figure on the screen agrees.
   const [now] = useState(() => Date.now());
@@ -57,7 +58,8 @@ export function ProgressScreen({ history, library, unit, onOpenHistory, onOpenEx
   if (history.length === 0) {
     return (
       <main className="screen with-tabs">
-        <header className="bar">
+        <header className="bar stats-header">
+          <button type="button" className="link" onClick={onBack}>‹ Workouts</button>
           <h1>Progress</h1>
         </header>
         <p className="empty">
@@ -70,7 +72,8 @@ export function ProgressScreen({ history, library, unit, onOpenHistory, onOpenEx
 
   return (
     <main className="screen with-tabs">
-      <header className="bar">
+      <header className="bar stats-header">
+        <button type="button" className="link" onClick={onBack}>‹ Workouts</button>
         <h1>Progress</h1>
       </header>
 

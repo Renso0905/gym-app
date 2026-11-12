@@ -28,7 +28,7 @@ interface ListProps {
   onBack: () => void;
 }
 
-// R4/R16: the full list of finished workouts, opened from the Progress tab.
+// R4/R16: the full list of finished workouts, opened from the Progress view.
 export function HistoryList({ history, unit, onOpen, onBack }: ListProps) {
   const sessions = sortHistory(history);
   return (
