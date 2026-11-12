@@ -77,13 +77,52 @@ The outline of a workout, built and edited freely.
 - Updating makes the routine match the session: exercises, order, set counts and
   the numbers lifted. The routine keeps its name and notes.
 
+### R13 Home tab
+- The tab bar has four tabs: Home, Routines, History and Progress. The app
+  opens on Home.
+- Home has no widgets yet; it says so. A workout in progress can be resumed
+  from it.
+- Home draws a list of widgets, so a widget can be added without restructuring
+  the screen. Choosing and arranging widgets is planned (R14).
+
+### R10 Progress
+Statistics calculated from the finished sessions; nothing extra is stored.
+- A period (4 weeks, 3 months, 1 year or all time) applies to the totals and
+  the muscle-group figures. A period covers today and the days before it.
+- Totals: workouts, total time, average workout length, sets, reps, volume and
+  workouts per week. The weekly average is measured from the first workout ever
+  logged when that is more recent than the start of the period.
+- Weekly streaks: the current and the longest run of consecutive weeks (Monday
+  to Sunday) with at least one workout. The current streak still counts when
+  this week has no workout yet but last week had one.
+- Charts of volume per week and workouts per week over the last 12 weeks.
+- Sets per muscle group, most trained first. The group comes from the exercise
+  library; exercises not found there count as "Other".
+- Every exercise logged is listed, most recently performed first, with the
+  number of workouts and sets. Opening one shows its personal records and a
+  chart of its best value in each workout.
+- Records, by how the exercise is measured:
+  - Weight and reps: estimated one-rep max, heaviest weight, best set volume,
+    best session volume, most reps in a set. The chart shows the estimated
+    one-rep max.
+  - Reps only: most reps in a set and in a session.
+  - Time: longest time, and most time in a session.
+  - Distance and time: longest distance, best pace (least time per unit of
+    distance), and most distance in a session.
+- The estimated one-rep max uses the Epley formula, weight x (1 + reps / 30);
+  a single rep counts as the weight itself.
+- A record is dated to the workout that first reached it.
+- Sets without usable numbers count as sets but never in volume, records or
+  charts.
+- With no finished workouts the tab explains what will appear.
+
 ## Planned
 
 - R5 Offline use: the app loads without a network (service worker).
 - R6 Install to the iPhone home screen (needs deployment).
 - R9 Rest timer between sets.
-- R10 Progress per exercise: personal records and charts.
 - R11 Edit a finished session.
+- R14 Home widgets: choose, arrange and customise what Home shows.
 
 ## Out of scope for now
 
