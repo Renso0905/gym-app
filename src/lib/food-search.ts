@@ -42,7 +42,7 @@ const amount = (value: unknown): number | undefined => {
   return Math.round(number * 100) / 100;
 };
 
-export function buildFoodSearchUrl(query: string, pageSize = 6): string {
+export function buildFoodSearchUrl(query: string, pageSize = 6, sameOrigin = import.meta.env.DEV): string {
   const url = new URL('https://us.openfoodfacts.org/cgi/search.pl');
   url.searchParams.set('search_terms', query.trim());
   url.searchParams.set('search_simple', '1');
@@ -50,10 +50,7 @@ export function buildFoodSearchUrl(query: string, pageSize = 6): string {
   url.searchParams.set('json', '1');
   url.searchParams.set('page_size', String(Math.min(20, Math.max(1, Math.floor(pageSize)))));
   url.searchParams.set('fields', FIELDS);
-  // Browsers cannot set the User-Agent header, so the legacy API accepts the
-  // same identifier as a query parameter.
-  url.searchParams.set('User-Agent', 'gym-app/0.1 (https://github.com/Renso0905/gym-app)');
-  return url.toString();
+  return sameOrigin ? `/api/food-search?${url.searchParams.toString()}` : url.toString();
 }
 
 function scaled(nutriments: Record<string, unknown>, nutrient: string, servingQuantity: number | undefined): number | undefined {

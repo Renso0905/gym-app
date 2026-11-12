@@ -51,6 +51,13 @@ rate-limited. The client requests only product identity, serving, image and
 nutrition fields; every response is treated as untrusted, validated and
 deduplicated before components receive it. No API key or account is stored.
 
+During local development, Vite exposes the same-origin `/api/food-search` route
+and makes an identified server-side request to Open Food Facts. It uses the
+global search host first and retries the US host once after a server failure.
+This avoids browser CORS and anonymous-bot blocking on phone previews.
+Production builds call the public endpoint directly until deployment supplies
+the same small endpoint.
+
 The search prefers per-serving nutrition, calculates it from per-100g values
 when a serving quantity is available, and otherwise labels values per 100g.
 Manual entry remains the offline and service-failure fallback.

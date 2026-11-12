@@ -3,7 +3,7 @@ import { buildFoodSearchUrl, parseFoodSearchResponse, searchFoods } from './food
 
 describe('Open Food Facts search URL', () => {
   it('builds a submit-based search requesting only the fields the app uses', () => {
-    const url = new URL(buildFoodSearchUrl('  greek yogurt  '));
+    const url = new URL(buildFoodSearchUrl('  greek yogurt  ', 6, false));
     expect(`${url.origin}${url.pathname}`).toBe('https://us.openfoodfacts.org/cgi/search.pl');
     expect(url.searchParams.get('search_terms')).toBe('greek yogurt');
     expect(url.searchParams.get('search_simple')).toBe('1');
@@ -11,12 +11,18 @@ describe('Open Food Facts search URL', () => {
     expect(url.searchParams.get('json')).toBe('1');
     expect(url.searchParams.get('page_size')).toBe('6');
     expect(url.searchParams.get('fields')).toContain('nutriments');
-    expect(url.searchParams.get('User-Agent')).toContain('gym-app/0.1');
+    expect(url.searchParams.has('User-Agent')).toBe(false);
   });
 
   it('keeps the page size within the public search limit used by the app', () => {
-    expect(new URL(buildFoodSearchUrl('apple', 0)).searchParams.get('page_size')).toBe('1');
-    expect(new URL(buildFoodSearchUrl('apple', 100)).searchParams.get('page_size')).toBe('20');
+    expect(new URL(buildFoodSearchUrl('apple', 0, false)).searchParams.get('page_size')).toBe('1');
+    expect(new URL(buildFoodSearchUrl('apple', 100, false)).searchParams.get('page_size')).toBe('20');
+  });
+
+  it('uses a same-origin route during local development', () => {
+    const url = buildFoodSearchUrl('apple', 6, true);
+    expect(url.startsWith('/api/food-search?')).toBe(true);
+    expect(new URL(url, 'http://localhost').searchParams.get('search_terms')).toBe('apple');
   });
 });
 
