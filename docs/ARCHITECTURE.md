@@ -68,8 +68,9 @@ GitHub environment, which requires approval from the repository owner.
   Dates use the device's local time and weeks start on Monday.
 - Charts are small hand-written SVG components (`src/components/Charts.tsx`),
   one series each, so no chart library is needed.
-- Home renders the `HOME_WIDGETS` list in `src/components/Home.tsx`, which is
-  empty for now. A widget is an id, a title and a render function.
+- Home renders the `HOME_WIDGETS` list in `src/components/Home.tsx`. A widget is
+  an id, a title and a render function given Home data and actions. The first
+  widget is the workout launcher; its routine fallback rule is in `src/lib/home.ts`.
 - Sleep is keyed by local calendar day (`YYYY-MM-DD`), not by a timestamp, so
   an entry stays on its day when the time zone or clock changes.
 - The web manifest exists, but there is no service worker until R5.

@@ -89,10 +89,21 @@ The outline of a workout, built and edited freely.
 
 ### R13 Home tab
 - Home is the first tab in the tab bar, and the app opens on it.
-- Home has no widgets yet; it says so. A workout in progress can be resumed
-  from it.
+- A workout in progress can be resumed from it.
 - Home draws a list of widgets, so a widget can be added without restructuring
   the screen. Choosing and arranging widgets is planned (R14).
+
+### R19 Home workout launcher
+A workout card on Home starts a routine without visiting the Routines tab.
+- The card selects the first routine by default and shows its name, exercise
+  count and up to four exercise names.
+- Swap workout opens the routine choices and changes the card without editing
+  any routine. If the chosen routine is later removed, the first remaining one
+  is selected.
+- Start workout begins the selected routine using the same session behavior as
+  the Routines tab. It is disabled while another workout is in progress; the
+  existing resume banner remains available.
+- With no routines, the card explains what is needed and opens the Routines tab.
 
 ### R10 Progress
 Statistics calculated from the finished sessions; nothing extra is stored.

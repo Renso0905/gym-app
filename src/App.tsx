@@ -45,6 +45,7 @@ export function App() {
   const data = useAppData();
   const { routines, setRoutines, history, setHistory, active, setActive, unit } = data;
   const [tab, setTab] = useState<Tab>('home');
+  const [homeWorkoutId, setHomeWorkoutId] = useState('');
   const [screen, setScreen] = useState<Screen>({ name: 'root' });
   const [picking, setPicking] = useState<null | { replace?: string }>(null);
   // Set after finishing a workout that differed from its routine, until the lifter answers.
@@ -186,7 +187,18 @@ export function App() {
   return (
     <>
       {tab === 'home' ? (
-        <Home data={{ routines, history, unit }} active={active} onResume={() => go({ name: 'session' })} />
+        <Home
+          data={{ routines, history, unit }}
+          active={active}
+          chosenWorkoutId={homeWorkoutId}
+          onChooseWorkout={setHomeWorkoutId}
+          onResume={() => go({ name: 'session' })}
+          onStart={start}
+          onOpenRoutines={() => {
+            setTab('routines');
+            window.scrollTo(0, 0);
+          }}
+        />
       ) : tab === 'progress' ? (
         <ProgressScreen
           history={history}
