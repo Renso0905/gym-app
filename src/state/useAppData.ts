@@ -1,15 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { ExerciseDef } from '../lib/exercises';
 import type { Session } from '../lib/sessions';
+import type { SleepLog } from '../lib/sleep';
 import {
   loadActiveSession,
   loadCustomExercises,
   loadHistory,
+  loadSleep,
   loadUnit,
   loadWorkouts,
   saveActiveSession,
   saveCustomExercises,
   saveHistory,
+  saveSleep,
   saveUnit,
   saveWorkouts,
   type KeyValueStore,
@@ -33,6 +36,7 @@ export function useAppData() {
   const [history, setHistory] = useState<Session[]>(() => loadHistory(store));
   const [active, setActive] = useState<Session | null>(() => loadActiveSession(store));
   const [customExercises, setCustomExercises] = useState<ExerciseDef[]>(() => loadCustomExercises(store));
+  const [sleep, setSleep] = useState<SleepLog>(() => loadSleep(store));
   const [unit, setUnitState] = useState<WeightUnit>(() => loadUnit(store));
   const [failed, setFailed] = useState<Record<string, boolean>>({});
 
@@ -42,6 +46,8 @@ export function useAppData() {
   useEffect(() => report('history', saveHistory(store, history)), [store, history, report]);
   useEffect(() => report('active', saveActiveSession(store, active)), [store, active, report]);
   useEffect(() => report('custom', saveCustomExercises(store, customExercises)), [store, customExercises, report]);
+
+  useEffect(() => report('sleep', saveSleep(store, sleep)), [store, sleep, report]);
 
   const setUnit = useCallback(
     (next: WeightUnit) => {
@@ -60,6 +66,8 @@ export function useAppData() {
     setActive,
     customExercises,
     setCustomExercises,
+    sleep,
+    setSleep,
     unit,
     setUnit,
     saveFailed: Object.values(failed).some(Boolean),

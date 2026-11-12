@@ -5,6 +5,7 @@ import { HistoryDetail, HistoryList } from './components/History';
 import { Home } from './components/Home';
 import { ExerciseProgressScreen, ProgressScreen } from './components/Progress';
 import { SessionScreen } from './components/SessionScreen';
+import { SleepScreen } from './components/Sleep';
 import { WorkoutEditor } from './components/WorkoutEditor';
 import { WorkoutList } from './components/WorkoutList';
 import { allExercises, type ExerciseDef } from './lib/exercises';
@@ -36,6 +37,7 @@ const TABS = [
   { id: 'routines', label: 'Routines' },
   { id: 'history', label: 'History' },
   { id: 'progress', label: 'Progress' },
+  { id: 'sleep', label: 'Sleep' },
 ] as const;
 type Tab = (typeof TABS)[number]['id'];
 
@@ -183,6 +185,8 @@ export function App() {
         <Home data={{ routines, history, unit }} active={active} onResume={() => go({ name: 'session' })} />
       ) : tab === 'progress' ? (
         <ProgressScreen history={history} library={library} unit={unit} onOpenExercise={(key) => go({ name: 'exercise-progress', key })} />
+      ) : tab === 'sleep' ? (
+        <SleepScreen sleep={data.sleep} saveFailed={data.saveFailed} onChange={data.setSleep} />
       ) : tab === 'routines' ? (
         <WorkoutList
           workouts={routines}

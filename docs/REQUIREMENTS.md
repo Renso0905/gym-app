@@ -78,8 +78,7 @@ The outline of a workout, built and edited freely.
   the numbers lifted. The routine keeps its name and notes.
 
 ### R13 Home tab
-- The tab bar has four tabs: Home, Routines, History and Progress. The app
-  opens on Home.
+- Home is the first tab in the tab bar, and the app opens on it.
 - Home has no widgets yet; it says so. A workout in progress can be resumed
   from it.
 - Home draws a list of widgets, so a widget can be added without restructuring
@@ -115,6 +114,23 @@ Statistics calculated from the finished sessions; nothing extra is stored.
 - Sets without usable numbers count as sets but never in volume, records or
   charts.
 - With no finished workouts the tab explains what will appear.
+
+### R15 Sleep tracker
+One number per night: the hours slept, filed under the day you woke up.
+- A Sleep tab, last in the tab bar, shows a month calendar with weeks starting
+  on Monday. It opens on the current month with today marked and selected.
+  Earlier months can be browsed; months after the current one cannot.
+- Each day is a circle. Today and earlier days can be selected to enter, change
+  or clear the hours, by typing or in half-hour steps. Days after today cannot.
+- Hours are from 0 to 24, rounded to the quarter hour. Clearing the number
+  removes the entry.
+- Circle colours: grey when an earlier day has no entry; red under 6 hours;
+  yellow from 6 up to 7; green from 7 up to 8; turquoise at 8 or more. A
+  boundary belongs to the band above it, so exactly 7 hours is green.
+- A tracked day also shows its hours, and a legend explains the colours.
+- The month shows how many nights were tracked and their average.
+- Entries are saved to the device immediately and survive a reload. Damaged
+  entries are skipped. If the device refuses the save, the screen says so.
 
 ## Planned
 
