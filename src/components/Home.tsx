@@ -1,8 +1,11 @@
 // R13 and R19: the Home tab and its workout launcher widget.
 import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 import { homeWorkout } from '../lib/home';
+import { formatNutritionAmount, type NutritionData } from '../lib/nutrition';
 import type { Session } from '../lib/sessions';
+import { formatHours, type SleepLog } from '../lib/sleep';
 import type { WeightUnit } from '../lib/storage';
+import { weeklyCalories, weeklySleep, type WeeklyComparison } from '../lib/weekly';
 import { displayName, type Workout } from '../lib/workouts';
 import { ConfirmButton } from './ConfirmButton';
 
@@ -11,6 +14,8 @@ export interface HomeData {
   routines: Workout[];
   history: Session[];
   unit: WeightUnit;
+  sleep: SleepLog;
+  nutrition: NutritionData;
 }
 
 export interface HomeWidget {
@@ -106,6 +111,53 @@ export const HOME_WIDGETS: readonly HomeWidget[] = [
     render: (data, actions) => <WorkoutLauncher data={data} actions={actions} />,
   },
 ];
+
+function WeeklyStat({
+  label,
+  stat,
+  format,
+  unitLabel,
+}: {
+  label: string;
+  stat: WeeklyComparison;
+  format: (value: number) => string;
+  unitLabel: string;
+}) {
+  const change = stat.change;
+  const direction = change === undefined || Math.abs(change) < 0.005 ? 'same' : change > 0 ? 'up' : 'down';
+  return (
+    <section className="card weekly-stat" aria-label={`${label} this week`}>
+      <span className="muted">{label}</span>
+      <strong>{stat.thisWeek === undefined ? '–' : format(stat.thisWeek)}</strong>
+      <span className="weekly-stat-foot">
+        <small className="muted">{unitLabel}</small>
+        {change !== undefined && (
+          <small
+            className={`weekly-change ${direction}`}
+            aria-label={direction === 'same' ? 'Same as last week' : `${direction === 'up' ? 'Up' : 'Down'} ${format(Math.abs(change))} from last week`}
+          >
+            {direction === 'up' ? '+' : direction === 'down' ? '−' : '±'}
+            {format(Math.abs(change))}
+          </small>
+        )}
+      </span>
+    </section>
+  );
+}
+
+function WeeklyAverages({ sleep, nutrition, now }: { sleep: SleepLog; nutrition: NutritionData; now: number }) {
+  return (
+    <div className="weekly-stats" aria-label="This week's averages">
+      <WeeklyStat label="Avg sleep this week" stat={weeklySleep(sleep, now)} format={formatHours} unitLabel="per night" />
+      <WeeklyStat
+        label="Avg calories this week"
+        stat={weeklyCalories(nutrition, now)}
+        format={(value) => formatNutritionAmount(Math.round(value))}
+        unitLabel="kcal per day"
+      />
+    </div>
+  );
+}
 
 function DataBackup({
   onExport,
@@ -204,6 +256,7 @@ export function Home({
   widgets = HOME_WIDGETS,
 }: Props) {
   const actions: HomeActions = { active, chosenWorkoutId, onChooseWorkout, onStart, onOpenRoutines };
+  const [now] = useState(() => Date.now());
   return (
     <main className="screen with-tabs">
       <header className="bar">
@@ -218,6 +271,8 @@ export function Home({
           <span>Resume ›</span>
         </button>
       )}
+
+      <WeeklyAverages sleep={data.sleep} nutrition={data.nutrition} now={now} />
 
       {widgets.length === 0 ? (
         <p className="empty">Nothing here yet. Widgets you choose will appear on this screen.</p>

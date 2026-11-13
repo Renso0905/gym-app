@@ -160,6 +160,7 @@ A daily food log with one set of goals shared across days.
   browse earlier days, but not future days.
 - A calorie goal is always set and defaults to 2,000 kcal. Protein and fiber
   goals are optional. Goals accept positive numbers and are saved immediately.
+  They are edited from a cog button at the top right of the calorie card.
 - A food has a name, calories and optional protein and fiber amounts. It can be
   added manually to the selected day or removed from that day's log.
 - The day shows calorie progress and the amount remaining or over goal. Protein
@@ -194,6 +195,18 @@ Dedicated 30-day summaries calculated from existing on-device logs.
   daily calories with the current goal drawn as a reference line.
 - Both views cover today and the previous 29 days. Missing days are omitted
   rather than treated as zero, and an empty view explains how to begin.
+
+### R22 Home weekly averages
+Two boxes side by side on Home, calculated from the existing sleep and
+nutrition logs; nothing extra is stored.
+- One shows the average hours of sleep per tracked night this week, the other
+  the average calories per day with food logged this week. Weeks run Monday to
+  Sunday in local calendar days, and missing days are omitted rather than
+  treated as zero.
+- When last week also has data, the bottom right of each box shows the change
+  from last week's average: green with a plus sign for an increase, red with a
+  minus sign for a decrease.
+- A week with no data shows a dash and no change.
 
 ### R5 Offline use
 - A production build registers a service worker after the first successful

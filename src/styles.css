@@ -18,6 +18,14 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /*
+   * In the installed iPhone app (black-translucent status bar) a page shorter
+   * than the screen leaves the fixed tab bar floating above a gap the height of
+   * the status bar. Keeping the document at least screen height plus that inset
+   * pins the tab bar to the bottom edge on short tabs such as Home and Workouts.
+   */
+  min-height: calc(100% + env(safe-area-inset-top));
+  background: var(--bg);
 }
 
 body {
@@ -1359,12 +1367,6 @@ button.day.selected {
   background: var(--fiber);
 }
 
-.goal-settings summary {
-  color: var(--text);
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-
 .goal-settings > .muted,
 .search-note {
   margin: 0;
@@ -1723,4 +1725,73 @@ button.nutrition-day.selected {
   .food-fields .field > span {
     font-size: 0.7rem;
   }
+}
+
+/* --- nutrition goal cog --------------------------------------------------- */
+
+.calorie-card {
+  position: relative;
+}
+
+button.icon.goal-cog {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 36px;
+  min-height: 36px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.25rem;
+}
+
+button.icon.goal-cog:active {
+  color: var(--text);
+}
+
+/* --- home weekly averages (R22) ------------------------------------------- */
+
+.weekly-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.weekly-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.weekly-stat > strong {
+  font-size: 1.6rem;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.weekly-stat-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.weekly-change {
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.weekly-change.up {
+  color: var(--good);
+}
+
+.weekly-change.down {
+  color: var(--danger);
+}
+
+.weekly-change.same {
+  color: var(--muted);
 }
