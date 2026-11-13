@@ -1,7 +1,8 @@
 # Market-intelligence studies (ai-factory docs/RESEARCH.md). Started by hand only:
 # Actions tab -> Research -> Run workflow. The study's contract must already be
 # merged to main. The result is pushed as a research/<study>-<run> branch to
-# review as a pull request.
+# review as a pull request. To retry a failed step, give the failed run's id
+# and the step to resume at; earlier steps are not repeated.
 name: Research
 
 on:
@@ -12,10 +13,26 @@ on:
         required: true
         type: string
       reviewer-model:
-        description: Gemini model for the reviewer
+        description: Reviewer model (an id listed by Antigravity CLI)
         required: false
         type: string
-        default: gemini-3.8-flash
+        default: gemini-3.8-flash-medium
+      resume-run:
+        description: To retry a failed run, its run id (the number in its URL). Leave empty for a new study.
+        required: false
+        type: string
+        default: ''
+      resume-at:
+        description: With a run id, the step to retry
+        required: false
+        type: choice
+        default: ''
+        options:
+          - ''
+          - review-1
+          - respond
+          - review-2
+          - report
 
 permissions:
   contents: read
@@ -24,10 +41,13 @@ jobs:
   research:
     permissions:
       contents: write
+      actions: read
     uses: Renso0905/ai-factory/.github/workflows/research.yml@v1
     with:
       study: ${{ inputs.study }}
       reviewer-model: ${{ inputs.reviewer-model }}
+      resume-run: ${{ inputs.resume-run }}
+      resume-at: ${{ inputs.resume-at }}
     secrets:
       claude-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
       gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
