@@ -1,9 +1,10 @@
 // R13 and R19: the Home tab and its workout launcher widget.
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useState, type ChangeEvent, type ReactNode } from 'react';
 import { homeWorkout } from '../lib/home';
 import type { Session } from '../lib/sessions';
 import type { WeightUnit } from '../lib/storage';
 import { displayName, type Workout } from '../lib/workouts';
+import { ConfirmButton } from './ConfirmButton';
 
 /** What a widget is given to draw itself from. */
 export interface HomeData {
@@ -106,6 +107,77 @@ export const HOME_WIDGETS: readonly HomeWidget[] = [
   },
 ];
 
+function DataBackup({
+  onExport,
+  onImport,
+}: {
+  onExport: () => string;
+  onImport: (raw: string) => boolean;
+}) {
+  const [pending, setPending] = useState<{ name: string; raw: string } | null>(null);
+  const [message, setMessage] = useState<{ kind: 'success' | 'error'; text: string } | null>(null);
+
+  function download() {
+    const blob = new Blob([onExport()], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `gym-tracker-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setMessage({ kind: 'success', text: 'Backup downloaded. Keep it somewhere private.' });
+  }
+
+  async function choose(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.currentTarget.files?.[0];
+    event.currentTarget.value = '';
+    if (!file) return;
+    if (file.size > 5_000_000) {
+      setPending(null);
+      setMessage({ kind: 'error', text: 'That backup is too large to be a Gym Tracker backup.' });
+      return;
+    }
+    setPending({ name: file.name, raw: await file.text() });
+    setMessage(null);
+  }
+
+  function restore() {
+    if (!pending) return;
+    if (!onImport(pending.raw)) {
+      setMessage({ kind: 'error', text: 'That file is not a valid Gym Tracker backup.' });
+      return;
+    }
+    setMessage({ kind: 'success', text: 'Backup restored on this device.' });
+    setPending(null);
+  }
+
+  return (
+    <section className="card data-backup">
+      <div>
+        <p className="eyebrow">On-device data</p>
+        <h2 className="section-title">Backup and restore</h2>
+      </div>
+      <p className="muted">Download a private copy before moving to a new website address or phone.</p>
+      <div className="backup-actions">
+        <button type="button" onClick={download}>Download backup</button>
+        <label className="file-button">
+          Choose backup
+          <input type="file" accept="application/json,.json" onChange={choose} />
+        </label>
+      </div>
+      {pending && (
+        <div className="restore-confirm">
+          <span className="muted">{pending.name}</span>
+          <ConfirmButton label="Restore backup" confirmLabel="Replace device data?" onConfirm={restore} />
+        </div>
+      )}
+      {message && <p className={`status ${message.kind}`} aria-live="polite">{message.text}</p>}
+    </section>
+  );
+}
+
 interface Props {
   data: HomeData;
   active: Session | null;
@@ -114,6 +186,8 @@ interface Props {
   onResume: () => void;
   onStart: (workout: Workout) => void;
   onOpenRoutines: () => void;
+  onExportBackup: () => string;
+  onImportBackup: (raw: string) => boolean;
   widgets?: readonly HomeWidget[];
 }
 
@@ -125,6 +199,8 @@ export function Home({
   onResume,
   onStart,
   onOpenRoutines,
+  onExportBackup,
+  onImportBackup,
   widgets = HOME_WIDGETS,
 }: Props) {
   const actions: HomeActions = { active, chosenWorkoutId, onChooseWorkout, onStart, onOpenRoutines };
@@ -155,6 +231,8 @@ export function Home({
           ))}
         </ul>
       )}
+
+      <DataBackup onExport={onExportBackup} onImport={onImportBackup} />
     </main>
   );
 }

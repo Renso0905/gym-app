@@ -25,6 +25,16 @@ export const NUTRITION_KEY = 'gym.nutrition.v1';
 
 export type WeightUnit = 'lb' | 'kg';
 
+export interface AppSnapshot {
+  routines: Workout[];
+  history: Session[];
+  active: Session | null;
+  customExercises: ExerciseDef[];
+  sleep: SleepLog;
+  nutrition: NutritionData;
+  unit: WeightUnit;
+}
+
 /** The part of the browser's localStorage this module needs; tests pass a fake. */
 export interface KeyValueStore {
   getItem(key: string): string | null;
@@ -287,4 +297,57 @@ export function loadNutrition(store: KeyValueStore): NutritionData {
 
 export function saveNutrition(store: KeyValueStore, data: NutritionData): boolean {
   return writeJson(store, NUTRITION_KEY, { version: 1, ...data });
+}
+
+// --- full-device backup (R21) ----------------------------------------------
+
+export function serializeAppBackup(data: AppSnapshot, now: number): string {
+  return JSON.stringify({
+    app: 'gym-tracker',
+    version: 1,
+    exportedAt: new Date(now).toISOString(),
+    data,
+  }, null, 2);
+}
+
+export function parseAppBackup(raw: string): AppSnapshot | null {
+  let backup: unknown;
+  try {
+    backup = JSON.parse(raw);
+  } catch {
+    return null;
+  }
+  if (!isRecord(backup) || backup.app !== 'gym-tracker' || backup.version !== 1 || !isRecord(backup.data)) return null;
+  const data = backup.data;
+  if (
+    !Array.isArray(data.routines)
+    || !Array.isArray(data.history)
+    || !(data.active === null || isRecord(data.active))
+    || !Array.isArray(data.customExercises)
+    || !isRecord(data.sleep)
+    || !isRecord(data.nutrition)
+    || typeof data.unit !== 'string'
+  ) return null;
+  const values: Record<string, string> = {
+    [WORKOUTS_KEY]: JSON.stringify({ version: 1, workouts: data.routines }),
+    [SESSIONS_KEY]: JSON.stringify({ version: 1, sessions: data.history }),
+    [ACTIVE_KEY]: JSON.stringify({ version: 1, session: data.active }),
+    [CUSTOM_EXERCISES_KEY]: JSON.stringify({ version: 1, exercises: data.customExercises }),
+    [SLEEP_KEY]: JSON.stringify({ version: 1, nights: data.sleep }),
+    [NUTRITION_KEY]: JSON.stringify({ version: 1, ...data.nutrition }),
+    [UNIT_KEY]: data.unit,
+  };
+  const store: KeyValueStore = {
+    getItem: (key) => values[key] ?? null,
+    setItem: () => {},
+  };
+  return {
+    routines: loadWorkouts(store),
+    history: loadHistory(store),
+    active: loadActiveSession(store),
+    customExercises: loadCustomExercises(store),
+    sleep: loadSleep(store),
+    nutrition: loadNutrition(store),
+    unit: loadUnit(store),
+  };
 }
