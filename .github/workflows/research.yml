@@ -1,0 +1,33 @@
+# Market-intelligence studies (ai-factory docs/RESEARCH.md). Started by hand only:
+# Actions tab -> Research -> Run workflow. The study's contract must already be
+# merged to main. The result is pushed as a research/<study>-<run> branch to
+# review as a pull request.
+name: Research
+
+on:
+  workflow_dispatch:
+    inputs:
+      study:
+        description: Study id (folder under research/ with an approved contract)
+        required: true
+        type: string
+      reviewer-model:
+        description: Gemini model for the reviewer
+        required: false
+        type: string
+        default: gemini-3.8-flash
+
+permissions:
+  contents: read
+
+jobs:
+  research:
+    permissions:
+      contents: write
+    uses: Renso0905/ai-factory/.github/workflows/research.yml@v1
+    with:
+      study: ${{ inputs.study }}
+      reviewer-model: ${{ inputs.reviewer-model }}
+    secrets:
+      claude-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      gemini-api-key: ${{ secrets.GEMINI_API_KEY }}
