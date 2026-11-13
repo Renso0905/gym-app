@@ -12,10 +12,10 @@ on:
         required: true
         type: string
       reviewer-model:
-        description: Gemini model for the reviewer (optional; a run log lists the available ones)
+        description: Gemini model for the reviewer
         required: false
         type: string
-        default: ''
+        default: gemini-3.8-flash
 
 permissions:
   contents: read
