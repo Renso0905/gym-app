@@ -1,10 +1,9 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vitest/config';
 import type { Plugin } from 'vite';
+import { handleFoodSearchRequest } from './src/lib/food-search-handler.ts';
 
 const FOOD_SEARCH_PATH = '/api/food-search';
-const FOOD_SEARCH_ORIGINS = ['https://world.openfoodfacts.org', 'https://us.openfoodfacts.org'];
-const FOOD_SEARCH_AGENT = 'gym-app/0.1 (https://github.com/Renso0905/gym-app)';
 
 type FoodApiServer = {
   middlewares: {
@@ -25,25 +24,16 @@ type FoodApiServer = {
 
 function foodSearchApi(): Plugin {
   const install = (server: FoodApiServer) => {
-    server.middlewares.use(FOOD_SEARCH_PATH, async (request, response, next) => {
-      if (request.method !== 'GET') {
-        next();
-        return;
-      }
-
+    server.middlewares.use(FOOD_SEARCH_PATH, async (request, response) => {
       try {
-        const incoming = new URL(request.url ?? '', 'http://localhost');
-        const requestSearch = (origin: string) => {
-          const upstream = new URL('/cgi/search.pl', origin);
-          incoming.searchParams.forEach((value, name) => upstream.searchParams.append(name, value));
-          return fetch(upstream, {
-            headers: { Accept: 'application/json', 'User-Agent': FOOD_SEARCH_AGENT },
-          });
-        };
-        let result = await requestSearch(FOOD_SEARCH_ORIGINS[0]);
-        if (result.status >= 500) result = await requestSearch(FOOD_SEARCH_ORIGINS[1]);
+        const result = await handleFoodSearchRequest(new Request(new URL(request.url ?? '', 'http://localhost'), {
+          method: request.method,
+        }));
         response.statusCode = result.status;
-        response.setHeader('Content-Type', result.headers.get('content-type') ?? 'application/json');
+        for (const header of ['Allow', 'Cache-Control', 'Content-Type', 'X-Content-Type-Options']) {
+          const value = result.headers.get(header);
+          if (value) response.setHeader(header, value);
+        }
         response.end(new Uint8Array(await result.arrayBuffer()));
       } catch {
         response.statusCode = 502;

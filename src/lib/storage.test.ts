@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest';
 import {
   loadUnit,
   loadWorkouts,
+  parseAppBackup,
   parseWorkouts,
   saveUnit,
   saveWorkouts,
   serializeWorkouts,
+  serializeAppBackup,
   UNIT_KEY,
   WORKOUTS_KEY,
   type KeyValueStore,
@@ -140,5 +142,61 @@ describe('weight unit', () => {
     expect(loadUnit(fakeStore({ [UNIT_KEY]: 'stone' }))).toBe('lb');
     expect(loadUnit(brokenStore)).toBe('lb');
     expect(saveUnit(brokenStore, 'kg')).toBe(false);
+  });
+});
+
+describe('full app backup', () => {
+  it('round-trips every kind of on-device data in a versioned file', () => {
+    const routine = fullWorkout();
+    const session = { ...routine, id: 'session-1', startedAt: 100, finishedAt: 200 };
+    const snapshot = {
+      routines: [routine],
+      history: [session],
+      active: { ...routine, id: 'active-1', startedAt: 300 },
+      customExercises: [{
+        id: 'custom-1',
+        name: 'My carry',
+        muscle: 'Full body' as const,
+        equipment: 'Other' as const,
+        kind: 'distance' as const,
+        custom: true as const,
+      }],
+      sleep: { '2026-11-11': 8 },
+      nutrition: {
+        goals: { calories: 2200, protein: 180 },
+        days: { '2026-11-11': [{ id: 'food-1', name: 'Oats', calories: 300, protein: 10 }] },
+      },
+      unit: 'kg' as const,
+    };
+    const raw = serializeAppBackup(snapshot, Date.UTC(2026, 10, 12));
+    expect(JSON.parse(raw)).toMatchObject({
+      app: 'gym-tracker',
+      version: 1,
+      exportedAt: '2026-11-12T00:00:00.000Z',
+    });
+    expect(parseAppBackup(raw)).toEqual(snapshot);
+  });
+
+  it('rejects unknown files and repairs damaged entries with normal storage rules', () => {
+    expect(parseAppBackup('not json')).toBeNull();
+    expect(parseAppBackup(JSON.stringify({ app: 'other', version: 1, data: {} }))).toBeNull();
+    expect(parseAppBackup(JSON.stringify({ app: 'gym-tracker', version: 1, data: {} }))).toBeNull();
+    const repaired = parseAppBackup(JSON.stringify({
+      app: 'gym-tracker',
+      version: 1,
+      data: {
+        routines: [null, fullWorkout()],
+        history: [],
+        active: null,
+        customExercises: [],
+        sleep: { bad: 99, '2026-11-11': 7.5 },
+        nutrition: { goals: { calories: -1 }, days: {} },
+        unit: 'stone',
+      },
+    }));
+    expect(repaired?.routines).toHaveLength(1);
+    expect(repaired?.sleep).toEqual({ '2026-11-11': 7.5 });
+    expect(repaired?.nutrition.goals.calories).toBe(2000);
+    expect(repaired?.unit).toBe('lb');
   });
 });

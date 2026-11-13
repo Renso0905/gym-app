@@ -198,6 +198,8 @@ export function App() {
           onChooseWorkout={setHomeWorkoutId}
           onResume={() => go({ name: 'session' })}
           onStart={start}
+          onExportBackup={data.exportBackup}
+          onImportBackup={data.importBackup}
           onOpenRoutines={() => {
             setTab('routines');
             window.scrollTo(0, 0);

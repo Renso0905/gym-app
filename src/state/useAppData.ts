@@ -18,6 +18,8 @@ import {
   saveSleep,
   saveUnit,
   saveWorkouts,
+  parseAppBackup,
+  serializeAppBackup,
   type KeyValueStore,
   type WeightUnit,
 } from '../lib/storage';
@@ -62,6 +64,38 @@ export function useAppData() {
     [store],
   );
 
+  const exportBackup = useCallback(
+    () => serializeAppBackup({ routines, history, active, customExercises, sleep, nutrition, unit }, Date.now()),
+    [routines, history, active, customExercises, sleep, nutrition, unit],
+  );
+
+  const importBackup = useCallback(
+    (raw: string) => {
+      const next = parseAppBackup(raw);
+      if (!next) return false;
+      const saved = {
+        routines: saveWorkouts(store, next.routines),
+        history: saveHistory(store, next.history),
+        active: saveActiveSession(store, next.active),
+        custom: saveCustomExercises(store, next.customExercises),
+        sleep: saveSleep(store, next.sleep),
+        nutrition: saveNutrition(store, next.nutrition),
+        unit: saveUnit(store, next.unit),
+      };
+      for (const [key, ok] of Object.entries(saved)) report(key, ok);
+      if (Object.values(saved).some((ok) => !ok)) return false;
+      setRoutines(next.routines);
+      setHistory(next.history);
+      setActive(next.active);
+      setCustomExercises(next.customExercises);
+      setSleep(next.sleep);
+      setNutrition(next.nutrition);
+      setUnitState(next.unit);
+      return true;
+    },
+    [store, report],
+  );
+
   return {
     routines,
     setRoutines,
@@ -77,6 +111,8 @@ export function useAppData() {
     setNutrition,
     unit,
     setUnit,
+    exportBackup,
+    importBackup,
     saveFailed: Object.values(failed).some(Boolean),
   };
 }

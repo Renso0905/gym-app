@@ -25,17 +25,6 @@ export function foodSearchResultDraft(result: FoodSearchResult) {
   };
 }
 
-const FIELDS = [
-  'code',
-  'product_name',
-  'generic_name',
-  'brands',
-  'serving_size',
-  'serving_quantity',
-  'nutriments',
-  'image_small_url',
-].join(',');
-
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
@@ -51,15 +40,12 @@ const amount = (value: unknown): number | undefined => {
   return Math.round(number * 100) / 100;
 };
 
-export function buildFoodSearchUrl(query: string, pageSize = 6, sameOrigin = import.meta.env.DEV): string {
-  const url = new URL('https://us.openfoodfacts.org/cgi/search.pl');
-  url.searchParams.set('search_terms', query.trim());
-  url.searchParams.set('search_simple', '1');
-  url.searchParams.set('action', 'process');
-  url.searchParams.set('json', '1');
-  url.searchParams.set('page_size', String(Math.min(20, Math.max(1, Math.floor(pageSize)))));
-  url.searchParams.set('fields', FIELDS);
-  return sameOrigin ? `/api/food-search?${url.searchParams.toString()}` : url.toString();
+export function buildFoodSearchUrl(query: string, pageSize = 5): string {
+  const params = new URLSearchParams({
+    search_terms: query.trim(),
+    page_size: String(Math.min(5, Math.max(1, Math.floor(pageSize)))),
+  });
+  return `/api/food-search?${params.toString()}`;
 }
 
 function scaled(nutriments: Record<string, unknown>, nutrient: string, servingQuantity: number | undefined): number | undefined {

@@ -11,7 +11,8 @@
     "dev": "vite",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "build": "vite build",
+    "build": "vite build && node scripts/generate-service-worker.mjs",
+    "icons": "powershell -ExecutionPolicy Bypass -File scripts/generate-icons.ps1",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -27,8 +27,9 @@ criteria of each requirement map to tests in `src/lib`.
 
 ## Data and privacy
 
-All data is stored on the device only, in the browser's localStorage. Nothing
-is sent to a server.
+All personal tracking data is stored on the device only, in the browser's
+localStorage. Food search terms are sent through the same-origin search
+function to Open Food Facts; workouts, sleep and nutrition logs are not.
 
 | Key | Holds |
 | --- | --- |
@@ -55,18 +56,29 @@ During local development, Vite exposes the same-origin `/api/food-search` route
 and makes an identified server-side request to Open Food Facts. It uses the
 global search host first and retries the US host once after a server failure.
 This avoids browser CORS and anonymous-bot blocking on phone previews.
-Production builds call the public endpoint directly until deployment supplies
-the same small endpoint.
+Production and local builds both call the same-origin endpoint. Cloudflare
+Pages serves `functions/api/food-search.ts` in production; Vite supplies the
+equivalent middleware locally. Both validate the query, control upstream
+parameters and identify the app before calling the global host with one US-host
+retry after server failures.
 
 The search prefers per-serving nutrition, calculates it from per-100g values
 when a serving quantity is available, and otherwise labels values per 100g.
 Search results are converted into ordinary nutrition drafts and logged directly
 to today. Manual entry remains the offline and service-failure fallback.
 
-## Deployment
+## Deployment and offline shell
 
-Not built yet. When added, the deploy job must target the `production`
-GitHub environment, which requires approval from the repository owner.
+Cloudflare Pages builds `main` with `npm run build` and publishes `dist`.
+The root `functions/` directory supplies the Pages Function; `public/_routes.json`
+keeps all static traffic out of the function. Account connection, production
+deployment approval and Cloudflare Access policy changes are owner-only steps
+documented in `docs/DEPLOYMENT.md`. No credentials are stored in the repo.
+
+The build generates `dist/sw.js` from the final hashed assets. It precaches the
+app shell, uses a navigation network-first fallback, caches same-origin static
+assets and always leaves `/api/` requests on the network. Old Gym Tracker
+caches are removed when a new service worker activates.
 
 ## Decisions
 
@@ -102,4 +114,8 @@ GitHub environment, which requires approval from the repository owner.
 - Sleep and nutrition statistics use rolling local-day windows and are derived
   on demand from those logs. Missing days are omitted from averages and charts;
   they are not interpreted as zero sleep or zero food.
-- The web manifest exists, but there is no service worker until R5.
+- The manifest, generated service worker and committed app icons make the
+  production build installable and keep its non-network features available
+  offline after the first successful load.
+- Backup files are versioned JSON snapshots. Restore passes every value through
+  the existing tolerant storage parsers before replacing in-memory state.

@@ -177,7 +177,8 @@ A daily food log with one set of goals shared across days.
   directly to today; the manual-entry form remains separate.
 - Search validates and deduplicates returned products, credits the community
   data source, and explains failures without blocking manual entry. It never
-  searches on every keystroke, so it respects the public service's rate limit.
+  searches on every keystroke and requests at most five results, so it respects
+  the public service's rate limit.
 - Goals and food logs are saved to the device immediately and survive a reload.
   Damaged days or entries are skipped. If the device refuses the save, the
   screen says so.
@@ -194,10 +195,32 @@ Dedicated 30-day summaries calculated from existing on-device logs.
 - Both views cover today and the previous 29 days. Missing days are omitted
   rather than treated as zero, and an empty view explains how to begin.
 
+### R5 Offline use
+- A production build registers a service worker after the first successful
+  load and precaches the built app shell.
+- Workouts, nutrition, sleep and backup tools continue to work without a
+  connection. Food database search remains network-only and keeps manual entry
+  available when offline.
+- Activating a new build removes older Gym Tracker caches.
+
+### R6 Install on iPhone
+- The manifest names Gym Tracker, uses standalone display mode and includes
+  192px, 512px maskable and 180px Apple touch icons.
+- iPhone web-app metadata uses the app name, theme colour and safe-area layout.
+- Production is served over HTTPS by Cloudflare Pages and can be protected by
+  an owner-configured Cloudflare Access policy.
+
+### R21 Backup and migration
+- Home provides a JSON backup download containing all routines, history, the
+  active workout, custom exercises, sleep, nutrition and the weight unit.
+- Restore accepts only the versioned Gym Tracker backup format, applies the
+  same repair rules as normal device loading and requires a second confirmation
+  before replacing device data.
+- Backup files stay on the user's device unless they choose where to save or
+  send them.
+
 ## Planned
 
-- R5 Offline use: the app loads without a network (service worker).
-- R6 Install to the iPhone home screen (needs deployment).
 - R9 Rest timer between sets.
 - R11 Edit a finished session.
 - R14 Home widgets: choose, arrange and customise what Home shows.

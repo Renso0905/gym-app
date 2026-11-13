@@ -350,6 +350,52 @@ details .field {
   font-size: 0.875rem;
 }
 
+.data-backup p {
+  margin: 0;
+}
+
+.backup-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.file-button {
+  min-height: 44px;
+  padding: 0 12px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-2);
+  cursor: pointer;
+  text-align: center;
+}
+
+.file-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  min-height: 0;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.restore-confirm {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.restore-confirm > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* --- routines, sessions, picker, history ---------------------------------- */
 
 h2.exercise-title {
