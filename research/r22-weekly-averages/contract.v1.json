@@ -1,0 +1,47 @@
+{
+  "kind": "contract",
+  "version": 1,
+  "mode": "focused",
+  "stage": "after",
+  "project": "gym-app",
+  "feature": "Home weekly averages: average sleep per night and average calories per day this week, with the change from last week (R22)",
+  "requirements": [
+    "R22: two boxes side by side on Home, average hours of sleep per tracked night and average calories per day with food logged, for the Monday-to-Sunday week",
+    "R22: missing days are omitted rather than treated as zero",
+    "R22: when last week has data, the change from last week is shown at the bottom right, green with a plus for an increase and red with a minus for a decrease",
+    "R22: a week with no data shows a dash and no change"
+  ],
+  "objective": "How do established fitness, nutrition and sleep apps present weekly average sleep and average daily calories and their change from the previous week, and where does our R22 implementation differ from common practice?",
+  "dimensions": [
+    "Averaging rule: tracked days only, calendar days, or a rolling window",
+    "Week definition: calendar week, which first day, or the last 7 days",
+    "How the change from the previous period is shown: absolute or percentage, arrows, colour",
+    "Whether colour reflects direction or progress toward the user's goal",
+    "Handling of incomplete weeks, missing days and no data",
+    "Where the summary appears and how quickly it can be read"
+  ],
+  "competitorRules": "Widely used apps that show a weekly sleep or calorie summary, such as calorie trackers and sleep or health dashboards. Prefer the vendor's own help centre, documentation and product pages. At most maxCompetitors apps.",
+  "include": [
+    "weekly average sleep",
+    "weekly average calories",
+    "week-over-week change display",
+    "missing-day and partial-week handling",
+    "colour and direction cues"
+  ],
+  "exclude": [
+    "workout tracking",
+    "food search and logging",
+    "meal planning",
+    "sleep stage detection and wearable hardware",
+    "social features",
+    "pricing and subscriptions"
+  ],
+  "deliverables": [
+    "Evidence-backed claims about each competitor within the dimensions",
+    "Management report comparing them with R22, with gaps and recommendations"
+  ],
+  "maxCompetitors": 5,
+  "maxReviewRounds": 2,
+  "approvedBy": "Renso0905 (by merging the pull request that adds this contract)",
+  "approvedAt": "2026-11-13T07:00:00Z"
+}
