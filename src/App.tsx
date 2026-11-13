@@ -192,7 +192,7 @@ export function App() {
         />
       ) : tab === 'home' ? (
         <Home
-          data={{ routines, history, unit }}
+          data={{ routines, history, unit, sleep: data.sleep, nutrition: data.nutrition }}
           active={active}
           chosenWorkoutId={homeWorkoutId}
           onChooseWorkout={setHomeWorkoutId}

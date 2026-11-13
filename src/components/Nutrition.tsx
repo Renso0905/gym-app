@@ -170,6 +170,15 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
   const [calorieGoal, setCalorieGoal] = useState<number | undefined>(nutrition.goals.calories);
   const [proteinGoal, setProteinGoal] = useState<number | undefined>(nutrition.goals.protein);
   const [fiberGoal, setFiberGoal] = useState<number | undefined>(nutrition.goals.fiber);
+  const [goalsOpen, setGoalsOpen] = useState(false);
+
+  function openGoals() {
+    // Start from the saved goals so a cancelled edit is not carried over.
+    setCalorieGoal(nutrition.goals.calories);
+    setProteinGoal(nutrition.goals.protein);
+    setFiberGoal(nutrition.goals.fiber);
+    setGoalsOpen(true);
+  }
 
   const foods = nutrition.days[selected] ?? [];
   const totals = nutritionTotals(foods);
@@ -271,6 +280,9 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
       </button>
 
       <section className="calorie-card" aria-label="Calorie progress">
+        <button type="button" className="icon goal-cog" aria-label="Daily goals" onClick={openGoals}>
+          <span aria-hidden="true">⚙</span>
+        </button>
         <div className="calorie-ring">
           <strong>{formatNutritionAmount(totals.calories)}</strong>
           <span>of {formatNutritionAmount(nutrition.goals.calories)} kcal</span>
@@ -309,8 +321,15 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
         </div>
       </div>
 
-      <details className="card goal-settings">
-        <summary>Daily goals</summary>
+      {goalsOpen && (
+        <div className="modal-backdrop">
+        <section className="modal goal-settings" role="dialog" aria-modal="true" aria-labelledby="goal-settings-title">
+        <header className="bar">
+          <h2 id="goal-settings-title">Daily goals</h2>
+          <button type="button" className="icon" aria-label="Close goals" onClick={() => setGoalsOpen(false)}>
+            ×
+          </button>
+        </header>
         <p className="muted">Calories are required. Protein and fiber are optional.</p>
         <div className="goal-grid">
           <label className="field stacked">
@@ -330,11 +349,16 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
           type="button"
           className="primary wide"
           disabled={calorieGoal === undefined || calorieGoal <= 0}
-          onClick={() => onChange(setNutritionGoals(nutrition, { calories: calorieGoal, protein: proteinGoal, fiber: fiberGoal }))}
+          onClick={() => {
+            onChange(setNutritionGoals(nutrition, { calories: calorieGoal, protein: proteinGoal, fiber: fiberGoal }));
+            setGoalsOpen(false);
+          }}
         >
           Save goals
         </button>
-      </details>
+        </section>
+        </div>
+      )}
 
       <section className="nutrition-section">
         <div className="section-heading">
@@ -358,7 +382,6 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
         </form>
 
         <div className="food-search-status" aria-live="polite">
-          {searchStatus === 'idle' && <p className="muted search-note">Tap Search when you are ready. Manual entry always remains available.</p>}
           {searchStatus === 'error' && <p className="status error">{searchError} You can still add the food manually below.</p>}
           {searchStatus === 'success' && searchResults.length === 0 && (
             <p className="muted search-note">No foods found for “{searchedQuery}”. Try a brand or a more general name.</p>
@@ -439,7 +462,7 @@ export function NutritionScreen({ nutrition, saveFailed, onChange }: Props) {
           </button>
         )}
         {foods.length === 0 ? (
-          <p className="empty compact">Nothing logged yet. Add your first food above.</p>
+          <p className="empty compact">Nothing logged yet.</p>
         ) : (
           <ul className="food-log">
             {foods.map((food) => (
