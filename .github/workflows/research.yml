@@ -12,8 +12,16 @@ on:
         description: Study id (folder under research/ with an approved contract)
         required: true
         type: string
+      reviewer-agent:
+        description: Reviewer. gemini is independent; claude is a fallback when Gemini is unavailable (not independent)
+        required: false
+        type: choice
+        default: gemini
+        options:
+          - gemini
+          - claude
       reviewer-model:
-        description: Reviewer model (an id listed by Antigravity CLI)
+        description: Gemini reviewer model (an id listed by Antigravity CLI); ignored for a Claude reviewer
         required: false
         type: string
         default: gemini-3.8-flash-medium
@@ -45,6 +53,7 @@ jobs:
     uses: Renso0905/ai-factory/.github/workflows/research.yml@v1
     with:
       study: ${{ inputs.study }}
+      reviewer-agent: ${{ inputs.reviewer-agent }}
       reviewer-model: ${{ inputs.reviewer-model }}
       resume-run: ${{ inputs.resume-run }}
       resume-at: ${{ inputs.resume-at }}
