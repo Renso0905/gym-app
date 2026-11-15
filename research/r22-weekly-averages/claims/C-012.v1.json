@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-012", "version": 1, "author": "researcher", "round": 1,
+  "claim": "Our R22 implementation averages sleep over nights present in the sleep log and calories over days with at least one food entry, within the Monday-to-Sunday local calendar week.",
+  "subject": "gym-app (R22)",
+  "basis": "observed",
+  "evidence": ["E-010"],
+  "limitations": "Read from source code at commit f046ac0; not tested in the running app during this study."
+}

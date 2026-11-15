@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-001", "version": 1, "author": "researcher", "round": 1,
+  "claim": "Google Health (the former Fitbit app) help says its weekly sleep view shows the hours slept each night that week together with a weekly average.",
+  "subject": "Google Health (Fitbit)",
+  "basis": "documented",
+  "evidence": ["E-001"],
+  "limitations": "Help-centre text, not observed in the app. The page does not say which day the week starts, whether it is a calendar week or the last 7 days, or how nights without data affect the average. The page says the feature may require a Premium subscription."
+}

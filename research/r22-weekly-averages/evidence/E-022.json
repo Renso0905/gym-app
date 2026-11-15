@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-022",
+  "author": "reviewer",
+  "source": { "type": "document", "ref": "src/lib/weekly.ts (gym-app working tree during this review)" },
+  "retrievedAt": "2026-11-15T07:25:00.000Z",
+  "sha256": "7927e13635aac1e71bd3c52700a05ce9f5d41144693271af1270a5051cb07ab1",
+  "excerpt": "keys.filter((key) => (data.days[key]?.length ?? 0) > 0).map((key) => nutritionTotals(data.days[key]).calories)",
+  "observation": "Read the file myself; its sha256 matches E-010. weekDayKeys uses (getDay() + 6) % 7 to find Monday and returns seven local-calendar day keys, Monday first. weekBefore moves seven calendar days back. sleepAverage keeps only keys present in the sleep log. calorieAverage keeps only days with at least one food entry. compare sets change = thisWeek - lastWeek only when both weeks have data. WeeklyComparison holds only thisWeek, lastWeek and change; it has no count of days.",
+  "limitations": "Source code only; I did not run the app or the tests."
+}

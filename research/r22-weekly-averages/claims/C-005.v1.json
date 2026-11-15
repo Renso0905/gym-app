@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-005", "version": 1, "author": "researcher", "round": 1,
+  "claim": "In Oura's Trends Week view, the average value shown beside a graph is taken since the beginning of the member's data, not over the displayed week.",
+  "subject": "Oura",
+  "basis": "documented",
+  "evidence": ["E-009"],
+  "limitations": "Help-centre text, not observed in the app. The page describes the reference average, not how a weekly average of sleep is computed or whether a week-over-week change is shown."
+}

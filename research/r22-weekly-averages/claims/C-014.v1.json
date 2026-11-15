@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-014", "version": 1, "author": "researcher", "round": 1,
+  "claim": "Our R22 implementation compares the current, possibly incomplete, week's average with the previous full week's average and does not show how many days either average covers.",
+  "subject": "gym-app (R22)",
+  "basis": "observed",
+  "evidence": ["E-010", "E-011"],
+  "limitations": "Read from source code at commit f046ac0; not tested in the running app."
+}

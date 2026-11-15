@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-007",
+  "author": "researcher",
+  "source": { "type": "url", "ref": "https://help.macrofactorapp.com/en/articles/139-view-a-summary-of-your-nutrient-intake-with-the-nutrition-overview" },
+  "retrievedAt": "2026-11-13T06:22:06.730Z",
+  "sha256": "7482cf5633e1c3472918a791d7f5f5b9a1dab3d7a07d690c14fa8105628f47de",
+  "excerpt": "By default, this view will show you totals for the day you selected in the Food Log Timeline. To see calorie, macro, and micronutrient averages for the week, month, quarter, or year before the chosen day, use the tab selector at the top.",
+  "observation": "MacroFactor help article on the Nutrition Overview, reached from the Food Log. It shows daily totals by default, and a tab selector shows calorie, macro and micronutrient averages for the week, month, quarter or year 'before the chosen day'.",
+  "limitations": "Vendor help text, undated, not observed in the app. 'The week before the chosen day' suggests a window anchored on the chosen day rather than a calendar week, but the page does not say so explicitly, nor whether the chosen day is included or how unlogged days are treated. No comparison with a previous period is described."
+}

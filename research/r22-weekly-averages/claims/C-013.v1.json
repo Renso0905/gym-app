@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-013", "version": 1, "author": "researcher", "round": 1,
+  "claim": "Our R22 implementation colours the week-over-week change by its sign only (good colour for an increase, danger colour for a decrease) for both sleep and calories, regardless of the user's goal.",
+  "subject": "gym-app (R22)",
+  "basis": "observed",
+  "evidence": ["E-011", "E-012"],
+  "limitations": "Read from source code at commit f046ac0; the CSS variable values and the rendered appearance were not checked in a browser."
+}

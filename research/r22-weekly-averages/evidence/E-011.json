@@ -1,0 +1,10 @@
+{
+  "kind": "evidence",
+  "id": "E-011",
+  "author": "researcher",
+  "source": { "type": "document", "ref": "src/components/Home.tsx (gym-app repository, main at f046ac0), WeeklyStat and WeeklyAverages" },
+  "retrievedAt": "2026-11-13T06:25:00.000Z",
+  "sha256": "e27ea9a66da081c842b6240269381815ba97d9f7d45f203b033f8d7634c0a4ce",
+  "observation": "Our Home component renders two cards, 'Avg sleep this week' ('per night') and 'Avg calories this week' ('kcal per day'). With no data this week the value is a dash. When a change exists, it shows the absolute change with '+' (class 'up') for an increase, '−' (class 'down') for a decrease and '±' (class 'same') when the absolute change is below 0.005; the class depends only on the sign of the change, for both sleep and calories. No percentage, arrow, or count of days averaged is shown.",
+  "limitations": "Source code read at one commit; not observed in a browser. Colours come from CSS (see E-012)."
+}

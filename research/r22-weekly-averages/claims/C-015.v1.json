@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-015", "version": 1, "author": "researcher", "round": 1,
+  "claim": "Interpretation: colouring a calorie increase as good (C-013) can contradict a user whose goal is to eat less; MacroFactor's documented cues relate intake to the user's target (C-009, C-010) instead of to direction alone.",
+  "subject": "gym-app (R22) compared with MacroFactor",
+  "basis": "interpretation",
+  "evidence": ["E-008", "E-011", "E-012"],
+  "limitations": "Judgement, not tested with users. Based on one competitor's documentation; no fetched source shows how any competitor colours a week-over-week change."
+}

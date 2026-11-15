@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-007", "version": 1, "author": "researcher", "round": 1,
+  "claim": "In 2019 a Cronometer staff member said nutrition trends could not exclude days that had some data (such as synced biometrics) but no food logged.",
+  "subject": "Cronometer",
+  "basis": "documented",
+  "evidence": ["E-006"],
+  "limitations": "A single 2019 forum reply; it may no longer be true. Not observed in the app."
+}

@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-003",
+  "author": "researcher",
+  "source": { "type": "url", "ref": "https://forums.cronometer.com/discussion/650/mark-days-as-not-tracked-for-averages" },
+  "retrievedAt": "2026-11-13T06:21:30.475Z",
+  "sha256": "f7a468698a095aad13ce0d4ed073d1ba4590de4edbaf7babfd0e3bf7d13cc2c3",
+  "excerpt": "there's an \"All Days / Non-Empty Days / Completed Days\" dropdown. Selecting Non-Empty Days would exclude all empty days from the average and plotting of graphs.",
+  "observation": "Cronometer community forum thread from February 2018. A user asks for a way to stop untracked days from being averaged in as 0 calories. Another user (not identified as staff) replies that each Trends tab has an 'All Days / Non-Empty Days / Completed Days' dropdown and that 'Non-Empty Days' excludes empty days from the average and graphs, while empty days may still show on the Diary calorie chart.",
+  "limitations": "User forum post from 2018, not vendor documentation and not observed by me in the app; the current app may differ. Does not say which option is the default, and the original post implies that with the default setting an empty day is averaged as 0. Not specific to weekly periods."
+}

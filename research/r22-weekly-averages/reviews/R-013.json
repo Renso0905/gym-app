@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-013", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-013", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed in E-023 and E-024. WeeklyStat computes the direction from the sign of the change alone, and one component serves both sleep and calories. It receives no goal or target. The CSS colours 'up' var(--good) and 'down' var(--danger). I also checked the values the claim left unchecked: --good is #35c27a (green) and --danger is #ff6b6b (red), both in :root. A change below 0.005 is labelled 'same' and coloured var(--muted). Rendering in a browser was not checked.",
+  "evidence": ["E-023", "E-024"]
+}

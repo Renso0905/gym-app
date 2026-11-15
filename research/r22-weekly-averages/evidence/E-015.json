@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-015",
+  "author": "reviewer",
+  "source": { "type": "url", "ref": "https://support.ouraring.com/hc/en-us/articles/360055983614" },
+  "retrievedAt": "2026-11-15T07:22:09.476Z",
+  "sha256": "8e8c35e1cd422d1137fcedea237e23cc22bfd0e2b1ba4c857533500cc1f4695f",
+  "excerpt": "The value on the left side of the graph represents the average measurement of the displayed metric over a certain period.",
+  "observation": "Re-fetched Oura Member Care 'Using Trends' (last updated October 14, 2026); the hash matches E-009. The larger value at the top left is the most current data; the smaller value on the left side of the graph is an average over a period: 90 days in Day view, and 'since the beginning of your data' in Week, Month and Year views.",
+  "limitations": "Vendor help text, not observed in the app. Does not describe a per-week average of sleep hours, how the week is defined, missing-night handling, or any week-over-week change display."
+}

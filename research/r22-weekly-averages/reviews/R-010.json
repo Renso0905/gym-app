@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-010", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-010", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed in E-020: 'the line indicating your intake targets will turn a bolder shade (turning from gray to black in Light Mode, and from gray to white in Dark Mode) once you've reached your target.' Calling it 'a cue tied to the user's target rather than to direction of change' is a fair reading: the documented trigger is reaching the target.",
+  "evidence": ["E-020"]
+}

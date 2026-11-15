@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-011", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-011", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed in E-021 (same hash as E-005): 'Tap W at the top of the chart to view your sleep history for the past week.' I read the full page text and found no mention of an average sleep value or of a comparison with the previous week. The claim is limited to what the article says, and its limitations correctly note that absence from the page does not show absence from the app.",
+  "evidence": ["E-021"]
+}

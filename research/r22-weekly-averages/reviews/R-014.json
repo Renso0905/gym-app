@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-014", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-014", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed in E-022 and E-023. weeklySleep and weeklyCalories compare weekDayKeys(now), the current week including days not yet reached, with weekDayKeys(weekBefore(now)), the complete previous calendar week. WeeklyComparison holds only thisWeek, lastWeek and change, and WeeklyStat renders no day count. To be precise, 'previous full week' means the full calendar span; last week's average still covers only its tracked days.",
+  "evidence": ["E-022", "E-023"]
+}

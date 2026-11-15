@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-012",
+  "author": "researcher",
+  "source": { "type": "document", "ref": "src/styles.css (gym-app repository, main at f046ac0), section 'home weekly averages (R22)'" },
+  "retrievedAt": "2026-11-13T06:25:00.000Z",
+  "sha256": "e9810b32660b8139cd1e7f6f3630f2172f6a5b766f44cea87d0107dd53846305",
+  "excerpt": ".weekly-change.up {\n  color: var(--good);\n}\n\n.weekly-change.down {\n  color: var(--danger);\n}",
+  "observation": "The weekly stats are a two-column grid. The change text is coloured var(--good) when up, var(--danger) when down and var(--muted) when the same.",
+  "limitations": "Stylesheet only; the actual colour values of --good and --danger were not checked here, and nothing was observed in a browser."
+}

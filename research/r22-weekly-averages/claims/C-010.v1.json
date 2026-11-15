@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-010", "version": 1, "author": "researcher", "round": 1,
+  "claim": "MacroFactor's Nutrition & Targets widget marks reaching the day's target by turning the target line a bolder shade (grey to black, or grey to white in dark mode), a cue tied to the user's target rather than to direction of change.",
+  "subject": "MacroFactor",
+  "basis": "documented",
+  "evidence": ["E-008"],
+  "limitations": "Help-centre text, undated, not observed in the app. It concerns a daily target cue, not a weekly average or a week-over-week change."
+}

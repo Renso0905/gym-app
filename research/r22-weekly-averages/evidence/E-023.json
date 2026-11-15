@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-023",
+  "author": "reviewer",
+  "source": { "type": "document", "ref": "src/components/Home.tsx (gym-app working tree during this review), WeeklyStat and WeeklyAverages, lines 115-159" },
+  "retrievedAt": "2026-11-15T07:25:00.000Z",
+  "sha256": "e27ea9a66da081c842b6240269381815ba97d9f7d45f203b033f8d7634c0a4ce",
+  "excerpt": "const direction = change === undefined || Math.abs(change) < 0.005 ? 'same' : change > 0 ? 'up' : 'down';",
+  "observation": "Read the file myself; its sha256 matches E-011. WeeklyStat sets the direction from the sign of the change alone, and both the sleep and calorie cards use the same component. The value is '–' when thisWeek is undefined. The change element renders only when the change is defined, with the prefix '+', '−' or '±'. The component receives no goal or target, and it renders no day count, percentage or arrow.",
+  "limitations": "Source code only; not observed in a browser."
+}

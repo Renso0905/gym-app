@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-006", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-006", "version": 1 },
+  "disposition": "established",
+  "comment": "Both forum posts say what the claim reports (E-016: the 'All Days / Non-Empty Days / Completed Days' dropdown, from user Vickie, who is not staff; E-017: staff member Karen_Cronometer says trends can 'exclude days on which you have not included any data'). The claim attributes the information to these posts and dates them, so it is honest about the source. I also found an independent, newer vendor source (E-018, a Cronometer blog post from 22 March 2023). It lists 'All Days – Includes everything. Non-Empty Days – Excludes blank days. Complete Days' for the Nutrition Report. That suggests the option was still there in 2023, so the 'may differ' caveat is weaker than the claim implies. The researcher could cite E-018 in a revision. None of the three sources states the default option.",
+  "evidence": ["E-016", "E-017", "E-018"]
+}

@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-006", "version": 1, "author": "researcher", "round": 1,
+  "claim": "Cronometer lets the user choose whether nutrition trend averages include all days or exclude days with no data, according to 2018 and 2019 forum posts including one by Cronometer staff.",
+  "subject": "Cronometer",
+  "basis": "documented",
+  "evidence": ["E-003", "E-006"],
+  "limitations": "Forum posts from 2018 (a user) and 2019 (a staff member), not current help documentation and not observed in the app; the current app may differ. The default option is not stated. Not specific to weekly averages."
+}

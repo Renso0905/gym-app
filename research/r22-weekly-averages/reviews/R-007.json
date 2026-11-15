@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-007", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-007", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed in E-017: Karen_Cronometer (signed 'Karen Stark, cronometer.com', February 2019) wrote 'we don't have an option to exclude days with some data and no nutrition data'. The claim is correctly in the past tense and dated. Neither the thread nor the 2023 blog post (E-018) says whether this changed later; E-018 describes 'Non-Empty Days' only as excluding 'blank days'.",
+  "evidence": ["E-017"]
+}

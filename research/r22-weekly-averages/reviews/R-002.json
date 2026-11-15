@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-002", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-002", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed in E-013: 'Under the \"Sleep duration\" chart, tap 30 day average to compare your most recent results with your average over the past 30 days.' It is reached from the Sleep duration tile on the Today tab. As the claim's limitations say, the page does not describe how the comparison is displayed and has no week-over-week comparison.",
+  "evidence": ["E-013"]
+}

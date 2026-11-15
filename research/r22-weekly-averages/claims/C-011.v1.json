@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-011", "version": 1, "author": "researcher", "round": 1,
+  "claim": "Apple's current support article describes a W view of the Health app sleep chart as sleep history 'for the past week' and does not mention a weekly average or a comparison with the previous week.",
+  "subject": "Apple Health",
+  "basis": "documented",
+  "evidence": ["E-005"],
+  "limitations": "Help-centre text, not observed in the app. Absence from this page does not show the app lacks an average or comparison; 'past week' does not establish whether this is a calendar week or the last 7 days."
+}

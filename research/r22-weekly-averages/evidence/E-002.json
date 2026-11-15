@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-002",
+  "author": "researcher",
+  "source": { "type": "url", "ref": "https://support.ouraring.com/hc/en-us/articles/360046061373" },
+  "retrievedAt": "2026-11-13T06:21:29.086Z",
+  "sha256": "4aadb3e62d3af21720203e7c5098eb96b020c40213cfd69b49da08760bdd6e45",
+  "excerpt": "Each report shows your weekly average Readiness, Sleep, and Activity scores, and trend charts for contributors including resting heart rate, HRV, total sleep time, activity goal completion, and more.",
+  "observation": "Oura Member Care article 'Oura Reports', last updated October 14, 2026. Weekly reports show weekly average Readiness, Sleep and Activity scores and trend charts for contributors including total sleep time. New reports appear on the Today tab and past ones under menu > Reports. A weekly report requires the ring to have been worn the previous night and for at least two weeks total.",
+  "limitations": "Vendor help text, not observed in the app. Does not say whether the weekly report shows average sleep hours as a number, how the week is defined, how nights without data are treated, or whether the change from the previous week is shown or coloured."
+}

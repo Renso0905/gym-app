@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-001", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-001", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed against my own fetch (E-013). Under 'Check your average sleep stats' the page says: 'Hours slept: The number of hours you slept each night that week and your weekly average'. On phones these stats are reached via the Sleep tab and the W toggle. One minor point about the limitations: the 'may require a Google Health Premium subscription' note appears in the section 'What sleep information Google Health tracks', not in the averages section, so it is not clearly tied to the weekly average. The page describes W as 'Your timeline overview within this week', which hints at a calendar week but names no first day.",
+  "evidence": ["E-013"]
+}

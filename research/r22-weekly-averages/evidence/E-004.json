@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-004",
+  "author": "researcher",
+  "source": { "type": "url", "ref": "https://help.macrofactorapp.com/en/articles/18-view-weekly-nutrition-averages" },
+  "retrievedAt": "2026-11-13T06:21:42.338Z",
+  "sha256": "ad156295bf52c6fd2c595f84cabb6f4364d06ce359c0a7f5a43214684aab07f9",
+  "excerpt": "The chart on these pages show the average intake over a given time span. You can change the time span shown by time selection buttons below the chart.",
+  "observation": "MacroFactor help article 'View Weekly Nutrition Averages'. From the main dashboard's Nutrition section the user taps a nutrient; the chart shows average intake over a selectable time span, and the user can swipe to other periods.",
+  "limitations": "Vendor help text, undated, not observed in the app. Does not state the available time spans, the week start, whether unlogged days are included in the average, or whether a change from the previous period is shown."
+}

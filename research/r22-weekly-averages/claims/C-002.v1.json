@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-002", "version": 1, "author": "researcher", "round": 1,
+  "claim": "Google Health help describes a '30 day average' option under the Sleep duration chart that compares the most recent results with the average over the past 30 days.",
+  "subject": "Google Health (Fitbit)",
+  "basis": "documented",
+  "evidence": ["E-001"],
+  "limitations": "Help-centre text, not observed in the app. It does not say how the comparison is displayed (absolute or percentage, arrows, colour) and does not describe any comparison with the previous week."
+}
