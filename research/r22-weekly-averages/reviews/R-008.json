@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-008", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-008", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed in E-019: 'To see calorie, macro, and micronutrient averages for the week, month, quarter, or year before the chosen day, use the tab selector at the top.' The claim repeats the page's wording and keeps its own reading (a window anchored on the chosen day) in the limitations, which is appropriate.",
+  "evidence": ["E-019"]
+}

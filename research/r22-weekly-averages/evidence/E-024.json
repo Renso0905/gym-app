@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-024",
+  "author": "reviewer",
+  "source": { "type": "document", "ref": "src/styles.css (gym-app working tree during this review), lines 10, 459-462 and 1752-1797" },
+  "retrievedAt": "2026-11-15T07:25:00.000Z",
+  "sha256": "e9810b32660b8139cd1e7f6f3630f2172f6a5b766f44cea87d0107dd53846305",
+  "excerpt": ".weekly-change.up { color: var(--good); } .weekly-change.down { color: var(--danger); } .weekly-change.same { color: var(--muted); }",
+  "observation": "Read the file myself; its sha256 matches E-012. .weekly-stats is a two-column grid. Up changes are coloured var(--good), defined in :root as #35c27a (green); down changes are var(--danger), #ff6b6b (red); same changes are var(--muted).",
+  "limitations": "Stylesheet only; I did not view the rendered result in a browser."
+}

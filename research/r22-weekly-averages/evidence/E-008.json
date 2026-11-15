@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-008",
+  "author": "researcher",
+  "source": { "type": "url", "ref": "https://help.macrofactorapp.com/en/articles/225-understanding-the-widgets-at-the-top-of-the-dashboard" },
+  "retrievedAt": "2026-11-13T06:22:07.860Z",
+  "sha256": "284c11483484afcca1d4a6f3bc3edeeb4bb4a855b91667d93f4f4dd3c0c1982c",
+  "excerpt": "The “Difference” tells you whether you’ve generally been consuming a bit more than your intake targets for the past month (represented by a positive number), or a bit less than your intake targets for the past month (represented by a negative number).",
+  "observation": "MacroFactor help article on the three dashboard widgets. 'Nutrition & Targets' shows intake and targets for the full week with the current day in focus; tapping the selected day again shows the whole week. 'Energy Balance' shows the last month of intake against targets or expenditure, with an equation below the graph giving average intake, average target (or expenditure) and a signed 'Difference'. The target line turns a bolder shade (grey to black or white) once the day's target is reached.",
+  "limitations": "Vendor help text, undated, not observed in the app. The signed difference compares intake with a target or expenditure over the past month, not with the previous week. Does not say which day the week starts, nor whether any red or green colouring is used."
+}

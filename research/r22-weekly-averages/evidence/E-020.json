@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-020",
+  "author": "reviewer",
+  "source": { "type": "url", "ref": "https://help.macrofactorapp.com/en/articles/225-understanding-the-widgets-at-the-top-of-the-dashboard" },
+  "retrievedAt": "2026-11-15T07:22:42.702Z",
+  "sha256": "4aee913b4fcbe6e74292566b340a023d5077c7cbdebb8f872cbb640833111985",
+  "excerpt": "the line indicating your intake targets will turn a bolder shade (turning from gray to black in Light Mode, and from gray to white in Dark Mode) once you've reached your target.",
+  "observation": "Re-fetched the MacroFactor help article on the dashboard widgets. Nutrition & Targets shows the full week's intake and targets with the current day in focus. The target line turns a bolder shade once the day's target is reached. In its Targets view, Energy Balance shows the last month of intake against targets; the equation below the graph gives average intake, average target and a 'Difference' that is positive when intake exceeded targets and negative when it was below them. The Expenditure view does the same against calculated expenditure, where positive means surplus and negative means deficit. The page mentions colours only for the yellow target line, the orange expenditure line and the blue intake bars; it gives no colour for the Difference. The text matches E-008; the hash differs.",
+  "limitations": "Vendor help text, undated, not observed in the app. It compares intake with a target or expenditure over a month, not this week with last week."
+}

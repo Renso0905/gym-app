@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-009", "version": 1, "author": "researcher", "round": 1,
+  "claim": "MacroFactor's Energy Balance dashboard widget shows the past month's average calorie intake next to the average target or expenditure, with a signed 'Difference' that is positive when intake was higher and negative when lower.",
+  "subject": "MacroFactor",
+  "basis": "documented",
+  "evidence": ["E-008"],
+  "limitations": "Help-centre text, undated, not observed in the app. This compares intake with a target or expenditure over a month, not with the previous week, and the page does not say whether the difference is coloured."
+}

@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-012", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-012", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed by reading src/lib/weekly.ts myself (E-022, same sha256 as E-010). weekDayKeys uses (getDay() + 6) % 7 and local Date fields to build the Monday-to-Sunday local week. sleepAverage keeps only keys present in the sleep log. calorieAverage keeps only days where data.days[key] has at least one entry.",
+  "evidence": ["E-022"]
+}

@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-005",
+  "author": "researcher",
+  "source": { "type": "url", "ref": "https://support.apple.com/108906" },
+  "retrievedAt": "2026-11-13T06:21:43.897Z",
+  "sha256": "403f4a65edd9ff416556546a3fc209ffea7ae7e67f014ed161035107162696a7",
+  "excerpt": "The bar graph defaults to D for daily. Tap W at the top of the chart to view your sleep history for the past week. You can also tap M or 6M to view your history for the past month or 6 months.",
+  "observation": "Apple Support article 'Track your sleep on Apple Watch and use Sleep on iPhone', published September 14, 2026 (redirected to /en-us/108906). The Health app sleep bar graph has D, W, M and 6M views; W shows sleep history 'for the past week'. 'Show More Sleep Data' > Amounts shows Sleep Duration details such as Sleep Goal and Time Asleep. It says that if the watch is not worn to sleep the graph might not show any data.",
+  "limitations": "Vendor help text, not observed in the app. The current page does not mention a weekly average value, how nights without data are treated in any average, whether 'past week' is a calendar week or the last 7 days, or any comparison with the previous week."
+}

@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-010",
+  "author": "researcher",
+  "source": { "type": "document", "ref": "src/lib/weekly.ts (gym-app repository, main at f046ac0)" },
+  "retrievedAt": "2026-11-13T06:25:00.000Z",
+  "sha256": "7927e13635aac1e71bd3c52700a05ce9f5d41144693271af1270a5051cb07ab1",
+  "excerpt": "// R22: Home weekly averages. A week runs Monday to Sunday in local calendar\n// days. Averages cover tracked days only, so a missing day is never a zero.",
+  "observation": "Our R22 domain code. weekDayKeys returns the seven local-calendar day keys of the Monday-first week containing the given time. Sleep averages use only days present in the sleep log; calorie averages use only days with at least one food entry. The current week and the previous Monday-to-Sunday week are averaged separately; change is thisWeek minus lastWeek and is present only when both weeks have data. Nothing records how many days were averaged.",
+  "limitations": "Source code read at one commit; not a test of the running app. Says nothing about competitors."
+}

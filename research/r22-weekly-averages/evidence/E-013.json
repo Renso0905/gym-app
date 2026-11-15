@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-013",
+  "author": "reviewer",
+  "source": { "type": "url", "ref": "https://support.google.com/fitbit/answer/14236407?hl=en" },
+  "retrievedAt": "2026-11-15T07:22:02.765Z",
+  "sha256": "42448f7f9d1b44baffd583f9ec3817af90724aee42757f07d13a39c4a7732f17",
+  "excerpt": "Check your averages for the week or longer periods of time for certain sleep stats, including: Hours slept: The number of hours you slept each night that week and your weekly average.",
+  "observation": "Re-fetched the Google Health help article 'Track sleep with Google Health' (redirects to support.google.com/googlehealth/answer/14236407). Under 'Check your average sleep stats' it lists hours slept each night that week and the weekly average, plus weekly average sleep score and weekly average minutes asleep by stage. On phones, the user taps the Sleep tab and then D, W, M, 3M or Y to check average stats. Under the 'Sleep duration' chart (reached from the Sleep duration tile on the Today tab), tapping '30 day average' compares the most recent results with the average over the past 30 days. The trends section describes W as 'Your timeline overview within this week'. The note 'This feature may require a Google Health Premium subscription' appears in the section 'What sleep information Google Health tracks', not in the averages section. The hash differs from E-001, but the passages cited by C-001 and C-002 are unchanged.",
+  "limitations": "Vendor help text, not observed in the app. 'Within this week' hints at a calendar week, but the page names no first day and does not say how nights without data affect the average. It describes no comparison with the previous week and no colour or arrow cues."
+}

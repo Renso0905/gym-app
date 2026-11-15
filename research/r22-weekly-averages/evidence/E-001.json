@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-001",
+  "author": "researcher",
+  "source": { "type": "url", "ref": "https://support.google.com/fitbit/answer/14236407?hl=en" },
+  "retrievedAt": "2026-11-13T06:21:23.634Z",
+  "sha256": "a240fdaa74e079ff72b60e1f83dda97657e368ce87c19f5a6787f333c365073d",
+  "excerpt": "Hours slept: The number of hours you slept each night that week and your weekly average.",
+  "observation": "Google Health (formerly Fitbit app) help article 'Track sleep with Google Health'; the URL redirected to support.google.com/googlehealth/answer/14236407. It says the Sleep tab has D, W, M, 3M and Y views, and that average stats for the week include hours slept each night that week and the weekly average. It also says that under the 'Sleep duration' chart, tapping '30 day average' compares the most recent results with the average over the past 30 days. It notes the feature 'may require a Google Health Premium subscription'.",
+  "limitations": "Vendor help text, not observed in the app. Does not say which day a week starts on, whether the week is a calendar week or the last 7 days, how nights without data are treated in the average, or whether a change from the previous week is shown. Page undated apart from a notice about app version 5.12."
+}

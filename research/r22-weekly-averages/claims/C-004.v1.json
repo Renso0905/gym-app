@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-004", "version": 1, "author": "researcher", "round": 1,
+  "claim": "Oura shows a weekly report only if the ring was worn the previous night and for at least two weeks in total.",
+  "subject": "Oura",
+  "basis": "documented",
+  "evidence": ["E-002"],
+  "limitations": "Help-centre text, not observed in the app. It does not say how nights without data within a week affect the weekly averages."
+}

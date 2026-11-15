@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-004", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-004", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed in E-014: 'For weekly reports, you must wear the ring the previous night and for at least two weeks total', repeated under Troubleshooting ('previous night AND for at least two weeks total'). The page also says most reports require Gen2, or Gen3 or later with an active membership. That is a separate condition the claim does not mention, but it does not make the claim wrong.",
+  "evidence": ["E-014"]
+}

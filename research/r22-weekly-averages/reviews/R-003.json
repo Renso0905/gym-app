@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-003", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-003", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed in E-014 (same hash as E-002): 'Each report shows your weekly average Readiness, Sleep, and Activity scores, and trend charts for contributors including resting heart rate, HRV, total sleep time...'. The claim correctly says scores are averaged and total sleep time appears as a trend chart, not as an average number of hours.",
+  "evidence": ["E-014"]
+}

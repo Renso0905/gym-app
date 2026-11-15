@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-017",
+  "author": "reviewer",
+  "source": { "type": "url", "ref": "https://forums.cronometer.com/discussion/1827/days-with-only-biometrics-should-count-as-empty-for-nutrition-trends" },
+  "retrievedAt": "2026-11-15T07:22:14.526Z",
+  "sha256": "4d319c9f611fda7576afb5b2dd67f7d7cc1e2b9cb114e68f703cca5c1aefadcf",
+  "excerpt": "We have some options for viewing your trends so you can exclude days on which you have not included any data, though we don't have an option to exclude days with some data and no nutrition data",
+  "observation": "Re-fetched the February 2019 Cronometer forum thread. User BrianMI reports that days with only synced biometrics lowered his four-week nutrition trend average to about 1100 calories. Karen_Cronometer (signed 'Karen Stark, cronometer.com') replies as in the excerpt and suggests marking days complete so reports include only completed days. A later reply from April 2019 agrees with the request; no staff follow-up says it was implemented.",
+  "limitations": "A 2019 forum reply; current behaviour may differ. Not observed in the app."
+}

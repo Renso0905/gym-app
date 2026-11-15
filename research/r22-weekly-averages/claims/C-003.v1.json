@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-003", "version": 1, "author": "researcher", "round": 1,
+  "claim": "Oura's weekly report shows weekly average Readiness, Sleep and Activity scores and trend charts for contributors that include total sleep time.",
+  "subject": "Oura",
+  "basis": "documented",
+  "evidence": ["E-002"],
+  "limitations": "Help-centre text, not observed in the app. It does not establish whether average hours of sleep are shown as a single number, how the week is defined, or whether a change from the previous week is shown."
+}

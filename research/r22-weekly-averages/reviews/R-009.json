@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-009", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-009", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed in E-020: 'The little math equation below the graph shows your average energy intake ... for the past month, and your average energy intake targets for the past month.' The 'Difference' is positive when intake was above the targets and negative when below. In the Expenditure view, positive means surplus and negative means deficit. The page describes no colour for the Difference; it mentions colours only for the target line (yellow), the expenditure line (orange) and the intake bars (blue).",
+  "evidence": ["E-020"]
+}

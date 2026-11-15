@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-015", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-015", "version": 1 },
+  "disposition": "established",
+  "comment": "The claim is honestly labelled an interpretation, and its factual premises check out against my own evidence. Our change colour depends only on the sign, with no goal input, for calories as well as sleep (E-023, E-024). MacroFactor's documented cues relate intake to a target or expenditure (E-020: the signed Difference against targets, and the target line turning bolder on reaching the target). Concluding that a green calorie increase 'can contradict' a user trying to eat less follows from these premises, but it is a judgement, not tested with users. As the claim's limitations say, no source here shows how any competitor colours a week-over-week change, so it should not be presented as the common practice.",
+  "evidence": ["E-020", "E-023", "E-024"]
+}

@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-018",
+  "author": "reviewer",
+  "source": { "type": "url", "ref": "https://cronometer.com/blog/how-to-nutrition-report" },
+  "retrievedAt": "2026-11-15T07:22:37.357Z",
+  "sha256": "be543b36c52fa98b7caebfa0d2ff2a375699b298aba38edf33239aadd87b6110",
+  "excerpt": "Pick Which Days to Include: Control the accuracy of your report by choosing: All Days – Includes everything. Non-Empty Days – Excludes blank days. Complete Days – This shows only the days you've fully logged and marked as complete in your diary.",
+  "observation": "Independent vendor source: the Cronometer blog post 'Get to Know Your Nutrition: A Look at Cronometer's Nutrition Report', published 22 March 2023 (it redirects to a URL with a trailing slash). It says the Nutrition Report shows average nutrient intake over a time frame, and the user can choose All Days, Non-Empty Days or Complete Days. It also suggests leaving out today if logging is unfinished, so averages stay accurate. Basic users can view up to one week before today; Gold users can set custom ranges.",
+  "limitations": "Vendor blog, not a help-centre article, and not observed in the app. It covers the Nutrition Report rather than every Trends chart, and does not state the default option. I also tried the Cronometer help-centre article support.cronometer.com/hc/en-us/articles/360018569691, but it returned HTTP 403 (a bot check), so it is not recorded."
+}

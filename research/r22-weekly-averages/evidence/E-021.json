@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-021",
+  "author": "reviewer",
+  "source": { "type": "url", "ref": "https://support.apple.com/108906" },
+  "retrievedAt": "2026-11-15T07:22:42.981Z",
+  "sha256": "403f4a65edd9ff416556546a3fc209ffea7ae7e67f014ed161035107162696a7",
+  "excerpt": "The bar graph defaults to D for daily. Tap W at the top of the chart to view your sleep history for the past week. You can also tap M or 6M to view your history for the past month or 6 months.",
+  "observation": "Re-fetched Apple Support 'Track your sleep on Apple Watch and use Sleep on iPhone' (published September 14, 2026); the hash matches E-005. The full text has no mention of an average sleep value or a comparison with the previous week. 'Show More Sleep Data' > Amounts shows Sleep Duration details such as Sleep Goal and Time Asleep. The Apple Watch Sleep app shows sleep data for the last 14 days. The page also describes a nightly Sleep Score (0 to 100).",
+  "limitations": "Vendor help text, not observed in the app. Absence from this page does not show the app lacks an average or a comparison."
+}

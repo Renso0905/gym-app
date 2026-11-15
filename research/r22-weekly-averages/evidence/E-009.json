@@ -1,0 +1,11 @@
+{
+  "kind": "evidence",
+  "id": "E-009",
+  "author": "researcher",
+  "source": { "type": "url", "ref": "https://support.ouraring.com/hc/en-us/articles/360055983614" },
+  "retrievedAt": "2026-11-13T06:22:09.160Z",
+  "sha256": "8e8c35e1cd422d1137fcedea237e23cc22bfd0e2b1ba4c857533500cc1f4695f",
+  "excerpt": "For Day view , the average measurement is taken over 90 days\nFor  Week view , Month view , and Year view , the average measurement is taken since the beginning of your data",
+  "observation": "Oura Member Care article 'Using Trends', last updated October 14, 2026. Trend graphs have daily, weekly, monthly and yearly views. The large value at the top left is the most current value; the smaller value at the left of the graph is an average over a period: 90 days in Day view, and since the beginning of the user's data in Week, Month and Year views. Weekly sleep regularity views display averages of sleep timing for the period.",
+  "limitations": "Vendor help text, not observed in the app. Does not say how the week is defined, how nights without data are treated, or whether a change from the previous week is shown or coloured."
+}

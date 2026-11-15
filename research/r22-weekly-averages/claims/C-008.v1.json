@@ -1,0 +1,8 @@
+{
+  "kind": "claim", "id": "C-008", "version": 1, "author": "researcher", "round": 1,
+  "claim": "MacroFactor's Nutrition Overview shows calorie averages for the week, month, quarter or year before the day chosen in the Food Log.",
+  "subject": "MacroFactor",
+  "basis": "documented",
+  "evidence": ["E-007"],
+  "limitations": "Help-centre text, undated, not observed in the app. The wording suggests a window anchored on the chosen day rather than a calendar week, but the page does not say so explicitly, nor whether the chosen day is included or how unlogged days are treated."
+}

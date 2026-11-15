@@ -1,0 +1,7 @@
+{
+  "kind": "review", "id": "R-005", "author": "reviewer", "round": 1,
+  "target": { "claim": "C-005", "version": 1 },
+  "disposition": "established",
+  "comment": "Confirmed in E-015 (same hash as E-009): the value 'on the left side of the graph represents the average measurement ... over a certain period', and 'For Week view, Month view, and Year view, the average measurement is taken since the beginning of your data' (90 days for Day view).",
+  "evidence": ["E-015"]
+}
